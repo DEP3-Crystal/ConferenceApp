@@ -4,8 +4,10 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -18,4 +20,7 @@ public class Speaker {
     private String Bio;
     @OneToMany(mappedBy = "speaker")
     private List<SocialMedia> socialMediaUrls;
+
+    @ManyToMany
+    Set<Session> sessions;
 }
