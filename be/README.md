@@ -1,2 +1,0 @@
-# ConferenceApp
-## BackEnd  Documentation
