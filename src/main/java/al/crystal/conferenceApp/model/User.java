@@ -19,7 +19,6 @@ public abstract class User {
     private String firstName;
     private String lastName;
     private String email;
-    @OneToMany(mappedBy = "user")
-    private Set<SocialMedia> socialMedias;
-    private Type type;
+    private String password;
+    private Type userType;
 }
