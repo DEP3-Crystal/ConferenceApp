@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity(name = "organiser")
-@DiscriminatorValue(value = Type.Values.ORGANISER)
+@DiscriminatorValue(value = "O")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +19,10 @@ public class Organiser extends User {
 
     private String companyName;
     private String biography;
+    private String linkedinUrl;
+    private String tweeterUrl;
+    private String facebookUrl;
+    private String instagramUrl;
     @OneToMany(mappedBy = "organiser")
     private List<Event> events;
 }

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "user")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type",
         discriminatorType = DiscriminatorType.STRING)
 @Data
@@ -19,7 +19,6 @@ public abstract class User {
     private String firstName;
     private String lastName;
     private String email;
-    @OneToMany(mappedBy = "user")
-    private Set<SocialMedia> socialMedias;
-    private Type type;
+    private String password;
+    private Type userType;
 }

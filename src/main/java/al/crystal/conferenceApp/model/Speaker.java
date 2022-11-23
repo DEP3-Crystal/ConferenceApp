@@ -1,26 +1,37 @@
 package al.crystal.conferenceApp.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "speaker")
 public class Speaker {
     @Id
     private UUID id;
     private String name;
     private String lastName;
-    private String Bio;
-    @OneToMany(mappedBy = "speaker")
-    private List<SocialMedia> socialMediaUrls;
-
+    private String companyName;
+    private String biography;
+    private String title;
+    private String linkedinUrl;
+    private String tweeterUrl;
+    private String facebookUrl;
+    private String instagramUrl;
     @ManyToMany
-    Set<Session> sessions;
+    @JoinTable(name="session_speaker",
+            joinColumns=@JoinColumn(name="speaker_id"),
+            inverseJoinColumns=@JoinColumn(name="session_id")
+    )
+    private Set<Session> sessions;
+
+    @OneToMany(mappedBy = "speaker")
+    private List<SpeakerRate> ratings;
 }
