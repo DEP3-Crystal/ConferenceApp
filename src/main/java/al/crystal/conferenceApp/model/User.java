@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "user")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type",
         discriminatorType = DiscriminatorType.STRING)
 @Data
