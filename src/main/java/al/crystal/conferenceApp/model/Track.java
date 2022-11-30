@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "track")
+@Entity(name = "tracks")
 public class Track {
     @Id
     private UUID id;
