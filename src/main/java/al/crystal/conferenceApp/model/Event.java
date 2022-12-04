@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "event")
+@Entity(name = "events")
 public class Event {
     @Id
     private UUID id;
@@ -20,13 +20,27 @@ public class Event {
     private Date startDay;
     private Date endDay;
     private String location;
-    private boolean status;
+    //Status Open or Restricted
+    private boolean participation;
+    //New, Ongoing, Ended
+    private int eventStatus;
     private int capacity;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Organiser organiser;
+    @JoinColumn(name = "organiser_id", nullable = false)
+    private User organiser;
 
     @OneToMany(mappedBy = "event")
     private List<Track> tracks;
+
+    @ManyToMany
+    @JoinTable(name = "participant_event",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    List<User> participants;
+
+    private String eventImage;
+    private String summary;
+    private String description;
 
 }

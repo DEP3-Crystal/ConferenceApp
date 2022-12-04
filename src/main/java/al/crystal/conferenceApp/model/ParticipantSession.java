@@ -26,5 +26,5 @@ public class ParticipantSession {
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
-    private Participant participantSession;
+    private User participantSession;
 }

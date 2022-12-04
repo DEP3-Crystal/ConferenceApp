@@ -17,7 +17,7 @@ public class SpeakerRate {
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
-    private Participant participant;
+    private User user;
 
     @ManyToOne
     @MapsId("speakerId")
