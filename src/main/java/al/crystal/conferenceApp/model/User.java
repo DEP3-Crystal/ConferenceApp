@@ -44,6 +44,7 @@ public abstract class User {
     private Type userType;
     protected User(){}
 
+
 }
 
 

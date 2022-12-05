@@ -61,6 +61,13 @@ public class UsersService {
     public User getUserById(UUID id) {
         return this.userRepository.findById(id).orElse(null);
     }
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
+    public User getUserByEmailAndPassword(String email, String password) {
+        return this.userRepository.findByEmailAndPassword(email, password);
+    }
     public List<User> deleteUser(UUID id){
         this.userRepository.deleteById(id);
         return this.userRepository.findAll();

@@ -1,5 +1,6 @@
 package al.crystal.conferenceApp.resource;
 
+import al.crystal.conferenceApp.LoginUser;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.model.Participant;
 import al.crystal.conferenceApp.model.User;
@@ -28,10 +29,16 @@ public class UsersResource {
     public User findUserById(@PathVariable UUID id){
         return usersService.getUserById(id);
     }
+
+//    @GetMapping("/users/{email}")
+//    public User findUserByEmail(@PathVariable String email){
+//        return usersService.getUserByEmail(email);
+//    }
     @GetMapping("/users/participants")
     public List<Participant> getAllParticipants(){
         return this.usersService.getAllParticipants();
     }
+
     @GetMapping("/users/organisers")
     public List<Organiser> getAllOrganisers(){
         return this.usersService.getAllOrganisers();
@@ -39,9 +46,25 @@ public class UsersResource {
 
     @PostMapping(value = "/users/save",produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public List<User> addUser(@RequestBody User user) {
-        usersService.saveUser(user);
-        return this.usersService.getAll();
+    public List<User> addUser(@RequestBody User user) throws Exception {
+        String existingEmail = user.getEmail();
+        if (existingEmail != null && !"".equals(existingEmail)) {
+            User existingUser = usersService.getUserByEmail(existingEmail);
+            if (existingUser != null) {
+                throw new Exception("User with " + existingEmail + " is already exist");
+            }
+        }
+            usersService.saveUser(user);
+            return this.usersService.getAll();
+    }
+
+    @PostMapping(value="/login")
+    public User loginUser(@RequestBody LoginUser loginUser){
+        User ifExist = null;
+        if(loginUser.getEmail() !=null && loginUser.getEmail() !=null){
+            ifExist = this.usersService.getUserByEmailAndPassword(loginUser.getEmail(),loginUser.getPassword());
+        }
+    return ifExist;
     }
 
     @DeleteMapping(value = "/users/delete/{id}")
