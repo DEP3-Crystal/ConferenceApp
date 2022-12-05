@@ -1,18 +1,27 @@
 create table users(user_id VARCHAR(36) NOT NULL,
-first_name VARCHAR(40) NOT NULL,last_name VARCHAR(40) NOT NULL,
-email VARCHAR(100) NOT NULL, user_password VARCHAR(254) NOT NULL,
+first_name VARCHAR(40) NOT NULL CHECK (first_name NOT LIKE '%[0-9]%'),
+last_name VARCHAR(40) NOT NULL  CHECK (last_name NOT LIKE '%[0-9]%'),
+email VARCHAR(100) NOT NULL CHECK (email LIKE '%_@_%._%') UNIQUE,
+user_password text NOT NULL,
 user_type CHAR(1) NOT NULL,
 CONSTRAINT user_type_discriminator CHECK (user_type in ('O','P')),
-PRIMARY KEY (user_id));
+PRIMARY KEY (user_id)
+);
 
 
-create table organizer(user_id VARCHAR(36) NOT NULL PRIMARY KEY REFERENCES users( user_id) ON UPDATE CASCADE,
+create table organizer(
+user_id VARCHAR(36) NOT NULL UNIQUE references users,
 company_name VARCHAR(100) NOT NULL, biograpy TEXT NOT NULL,
 linkedin_url VARCHAR(70), tweeter_url VARCHAR(70),
-facebook_url  VARCHAR(70),	instagram_url VARCHAR(70));
+facebook_url  VARCHAR(70),	instagram_url VARCHAR(70),
+PRIMARY KEY (user_id),
+FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE
+);
 
-create table participant(user_id VARCHAR(36) NOT NULL PRIMARY KEY REFERENCES users(user_id) ON UPDATE CASCADE,
-participant_number INT NOT NULL);
+create table participant(user_id VARCHAR(36) NOT NULL UNIQUE,
+PRIMARY KEY (user_id),
+FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE
+);
 
 create table event(event_id VARCHAR(36) NOT NULL,title VARCHAR(40) NOT NULL,
 start_day DATE NOT NULL,
@@ -61,12 +70,12 @@ create table speaker_rate(user_id VARCHAR(36) NOT NULL,
 speaker_id VARCHAR(36) NOT NULL,
 FOREIGN KEY (user_id) REFERENCES participant(user_id) ON UPDATE CASCADE,
 FOREIGN KEY (speaker_id) REFERENCES speaker(speaker_id) ON UPDATE CASCADE,
-rate INT CHECK (rate>0 AND rate<=5));
+rate INT CHECK (rate BETWEEN 1 AND 5));
 
 
 create table participant_session(user_id VARCHAR(36) NOT NULL,
 session_id VARCHAR(36) NOT NULL,
-rate INT CHECK (rate>0 AND rate<=5),
+rate INT CHECK (rate BETWEEN 1 AND 5),
 subscribe BOOLEAN ,
 FOREIGN KEY (user_id) REFERENCES  participant(user_id) ON UPDATE CASCADE,
 FOREIGN KEY (session_id) REFERENCES session(session_id) ON UPDATE CASCADE);
