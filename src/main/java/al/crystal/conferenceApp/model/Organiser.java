@@ -17,36 +17,21 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Organiser extends User {
-//    @JsonProperty("companyName")
     private String companyName;
-//    @JsonProperty("biography")
     private String biography;
-//    @JsonProperty("linkedinUrl")
     private String linkedinUrl;
-//    @JsonProperty("tweeterUrl")
     private String tweeterUrl;
-//    @JsonProperty("facebookUrl")
     private String facebookUrl;
-//    @JsonProperty("instagramUrl")
     private String instagramUrl;
     @OneToMany(mappedBy = "organiser")
-//    @JsonProperty("events")
     private List<Event> events;
-//    @JsonCreator
     public Organiser(UUID id, String firstName, String lastName, String email, String password, Type userType,
-//                     @JsonProperty("companyName")
                      String companyName,
-//                     @JsonProperty("biography")
                      String biography,
-//                     @JsonProperty("linkedinUrl")
                      String linkedinUrl,
-//                     @JsonProperty("tweeterUrl")
                      String tweeterUrl,
-//                     @JsonProperty("facebookUrl")
                      String facebookUrl,
-//                     @JsonProperty("instagramUrl")
                      String instagramUrl,
-//                     @JsonProperty("events")
                      List<Event> events)
     {
         super(id,firstName,lastName,email,password,userType);
