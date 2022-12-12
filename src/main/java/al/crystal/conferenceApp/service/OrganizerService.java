@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class OrganizerService {
 
     @Autowired
-    private OrganiserRepository repository;
+    private OrganiserRepository organiserRepository;
 
 
     public String addOrganizer(OrganizerDTO organizer) {
@@ -19,12 +19,12 @@ public class OrganizerService {
                 organizer.getPassword(), organizer.getCompanyName(), organizer.getBiography()
                 , organizer.getLinkedinUrl(), organizer.getTweeterUrl(), organizer.getFacebookUrl(), organizer.getInstagramUrl());
 
-        repository.save(organiser);
-        return "Saved" ;
+        organiserRepository.save(organiser);
+        return "Saved";
     }
 
 
     public Organiser getOrganizer(Long id) {
-        return repository.findById(id).get();
+        return organiserRepository.findById(id).get();
     }
 }

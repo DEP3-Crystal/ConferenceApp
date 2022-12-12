@@ -29,10 +29,6 @@ public class Session {
     @JoinColumn(name = "track_id", nullable = true)
     private Track track;
 
-//    @ManyToOne
-//    @JoinColumn(name = "event_id", nullable = false)
-//    private Event event1;
-
     @ManyToMany
     @JoinTable(name = "session_speaker",
             joinColumns = @JoinColumn(name = "session_id"),

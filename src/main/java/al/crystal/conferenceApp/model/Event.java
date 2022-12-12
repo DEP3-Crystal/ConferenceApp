@@ -1,4 +1,4 @@
-package al.crystal.conferenceapp.model;
+package al.crystal.conferenceApp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -19,10 +19,6 @@ import java.util.List;
 public class Event {
     @Id
     @Column(name = "id", unique = true)
-//    @GeneratedValue(generator = "UUID")
-//    @GenericGenerator(
-//            name ="UUID",
-//            strategy = "org.hibernate.id.UUIDGenerator")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String title;
@@ -40,7 +36,7 @@ public class Event {
     private Organiser organiser;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "event",cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Track> tracks;
 
     @ManyToMany

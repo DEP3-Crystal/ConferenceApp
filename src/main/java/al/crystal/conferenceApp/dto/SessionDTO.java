@@ -1,6 +1,5 @@
 package al.crystal.conferenceApp.dto;
 
-import al.crystal.conferenceApp.model.Event;
 import al.crystal.conferenceApp.model.Track;
 import lombok.AllArgsConstructor;
 import lombok.Data;

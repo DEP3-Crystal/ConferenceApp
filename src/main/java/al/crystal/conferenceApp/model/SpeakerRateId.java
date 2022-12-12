@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

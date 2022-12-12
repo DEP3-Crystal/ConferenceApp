@@ -1,4 +1,4 @@
-package al.crystal.conferenceapp.model;
+package al.crystal.conferenceApp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -30,24 +30,6 @@ public class Organiser extends User implements Serializable {
     @JsonManagedReference
     @OneToMany(mappedBy = "organiser")
     private List<Event> events;
-//    public Organiser(Long id, String firstName, String lastName, String email, String password, Type userType,
-//                     String companyName,
-//                     String biography,
-//                     String linkedinUrl,
-//                     String tweeterUrl,
-//                     String facebookUrl,
-//                     String instagramUrl,
-//                     List<Event> events)
-//    {
-//        super(id,firstName,lastName,email,password,userType);
-//        this.companyName = companyName;
-//        this.biography = biography;
-//        this.linkedinUrl = linkedinUrl;
-//        this.tweeterUrl = tweeterUrl;
-//        this.facebookUrl = facebookUrl;
-//        this.instagramUrl = instagramUrl;
-//        this.events = events;
-//    }
 
     public Organiser(String firstName, String lastName, String email, String password, String companyName,
                      String biography, String linkedinUrl, String tweeterUrl, String facebookUrl, String instagramUrl) {

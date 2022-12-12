@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.*;
 public class OrganizerController {
 
     @Autowired
-   private OrganizerService service;
+    private OrganizerService service;
 
     @PostMapping("/add")
-    public String createOrganizer(@RequestBody OrganizerDTO organizerDTO){
-       return service.addOrganizer(organizerDTO);
+    public String createOrganizer(@RequestBody OrganizerDTO organizerDTO) {
+        return service.addOrganizer(organizerDTO);
     }
 
     @GetMapping("/get/{id}")
-    public Organiser getOrganizer(@PathVariable Long id){
+    public Organiser getOrganizer(@PathVariable Long id) {
         return service.getOrganizer(id);
     }
 }

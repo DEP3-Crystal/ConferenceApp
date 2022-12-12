@@ -1,6 +1,5 @@
 package al.crystal.conferenceApp.controller;
 
-import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.service.SpeakerService;
 import org.springframework.beans.factory.annotation.Autowired;

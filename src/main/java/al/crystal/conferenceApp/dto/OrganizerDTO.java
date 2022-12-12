@@ -1,6 +1,5 @@
 package al.crystal.conferenceApp.dto;
 
-import al.crystal.conferenceApp.model.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -19,7 +19,7 @@ public class SessionController {
     }
 
     @GetMapping("/{id}")
-    public Session getSession(@PathVariable Long id){
+    public Session getSession(@PathVariable Long id) {
         return sessionService.getSession(id);
     }
 }

@@ -15,7 +15,7 @@ public class SessionService {
     @Autowired
     private SessionRepository sessionRepository;
 
-    public String createSession(SessionDTO sessionDTO){
+    public String createSession(SessionDTO sessionDTO) {
         Session newSession = Session.builder().description(sessionDTO.getDescription())
                 .endTime(sessionDTO.getEndTime())
                 .startTime(sessionDTO.getStartTime())
@@ -28,13 +28,14 @@ public class SessionService {
         return "done";
     }
 
-    public String addSpeakers(Long sessionId,List<Speaker> speakers){
+    public String addSpeakers(Long sessionId, List<Speaker> speakers) {
         Session session = sessionRepository.getReferenceById(sessionId);
         session.getSpeakers().addAll(speakers);
         sessionRepository.save(session);
         return "done";
     }
-    public Session getSession(Long id){
+
+    public Session getSession(Long id) {
         return sessionRepository.getReferenceById(id);
     }
 }

@@ -26,25 +26,13 @@ public class Speaker {
     private String facebookUrl;
     private String instagramUrl;
     @ManyToMany
-    @JoinTable(name="session_speaker",
-            joinColumns=@JoinColumn(name="speaker_id"),
-            inverseJoinColumns=@JoinColumn(name="session_id")
+    @JoinTable(name = "session_speaker",
+            joinColumns = @JoinColumn(name = "speaker_id"),
+            inverseJoinColumns = @JoinColumn(name = "session_id")
     )
     private Set<Session> sessions;
 
     @OneToMany(mappedBy = "speaker")
     private List<SpeakerRate> ratings;
 
-    public Speaker(String name, String lastName, String companyName, String biography,
-                   String title, String linkedinUrl, String tweeterUrl, String facebookUrl, String instagramUrl) {
-        this.name = name;
-        this.lastName = lastName;
-        this.companyName = companyName;
-        this.biography = biography;
-        this.title = title;
-        this.linkedinUrl = linkedinUrl;
-        this.tweeterUrl = tweeterUrl;
-        this.facebookUrl = facebookUrl;
-        this.instagramUrl = instagramUrl;
-    }
 }

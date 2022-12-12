@@ -10,12 +10,6 @@ public class UserMapper {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .companyName(user.getCompanyName())
-                .biography(user.getBiography())
-                .linkedinUrl(user.getLinkedinUrl())
-                .facebookUrl(user.getFacebookUrl())
-                .instagramUrl(user.getInstagramUrl())
-                .tweeterUrl(user.getTweeterUrl())
                 .build();
     }
 }

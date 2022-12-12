@@ -1,6 +1,5 @@
 package al.crystal.conferenceApp.service;
 
-import al.crystal.conferenceApp.controller.TrackController;
 import al.crystal.conferenceApp.dto.TrackDTO;
 import al.crystal.conferenceApp.model.Track;
 import al.crystal.conferenceApp.repository.TrackRepository;
@@ -13,7 +12,7 @@ public class TrackService {
     @Autowired
     private TrackRepository trackRepository;
 
-    public String createTrack(TrackDTO trackDTO){
+    public String createTrack(TrackDTO trackDTO) {
         Track newTrack = Track.builder()
                 .trackName(trackDTO.getTrackName())
                 .event(trackDTO.getEvent())
@@ -23,7 +22,7 @@ public class TrackService {
         return "done";
     }
 
-    public Track getTrack(Long id){
+    public Track getTrack(Long id) {
         return trackRepository.getReferenceById(id);
     }
 }
