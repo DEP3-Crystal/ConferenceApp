@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @JsonSubTypes(
@@ -25,21 +28,31 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type",
         discriminatorType = DiscriminatorType.STRING)
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-public abstract class User {
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name ="UUID",
-            strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", updatable = false, nullable = false,columnDefinition = "BINARY(16)", unique = true)
+public abstract class User implements Serializable {
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @GeneratedValue(generator = "UUID")
+//    @GenericGenerator(
+//            name ="UUID",
+//            strategy = "org.hibernate.id.UUIDGenerator")
+//    @Column(name = "id", updatable = false, nullable = false,columnDefinition = "BINARY(16)", unique = true)
+    @Column(name = "id",unique = true)
     @Id
-    private UUID id;
+    private long id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     private Type userType;
     protected User(){}
+
+
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 }

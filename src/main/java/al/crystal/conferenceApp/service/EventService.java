@@ -1,5 +1,6 @@
 package al.crystal.conferenceApp.service;
 
+import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.model.*;
 import al.crystal.conferenceApp.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +19,19 @@ public class EventService {
     @OneToMany(mappedBy = "event")
     private List<Track> tracks;
 
-    public String saveEvent(Event event) {
+    public String saveEvent(EventDTO event) throws Exception {
 
-        Event newEvent = new Event();
-        newEvent.setTitle(event.getTitle());
-        newEvent.setStartDay(event.getStartDay());
-        newEvent.setEndDay(event.getEndDay());
-        newEvent.setLocation(event.getLocation());
-        newEvent.setStatus(event.isStatus());
-        newEvent.setCapacity(event.getCapacity());
-        newEvent.setOrganiser(event.getOrganiser());
-        newEvent.setTracks(event.getTracks());
+        if(event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())){
+            throw new Exception("not done");
+        }
+        Event newEvent=Event.builder()
+                .title(event.getTitle())
+                .startDay(event.getStartDay())
+                .endDay(event.getEndDay())
+                .location(event.getLocation())
+                .capacity(event.getCapacity())
+                .organiser(event.getOrganiser())
+                .build();
             this.eventRepository.save(newEvent);
         return "Saved";
     }
@@ -37,11 +40,11 @@ public class EventService {
         return this.eventRepository.findAll();
     }
 
-    public Event getEventById(UUID id) {
+    public Event getEventById(Long id) {
         return this.eventRepository.findById(id).orElse(null);
     }
 
-    public List<Event> deleteEvent(UUID id){
+    public List<Event> deleteEvent(Long id){
         this.eventRepository.deleteById(id);
         return this.eventRepository.findAll();
     }

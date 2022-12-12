@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 //@Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, Long> {
 public User findByEmail(String email);
 public User findByEmailAndPassword(String email, String password);
 }

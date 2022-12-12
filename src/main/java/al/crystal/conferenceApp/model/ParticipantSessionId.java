@@ -13,6 +13,6 @@ import java.util.UUID;
 @Embeddable
 public class ParticipantSessionId implements Serializable {
 
-    private UUID userId;
-    private UUID sessionId;
+    private long userId;
+    private long sessionId;
 }

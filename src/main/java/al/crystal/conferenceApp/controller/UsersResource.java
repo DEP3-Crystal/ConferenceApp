@@ -1,4 +1,4 @@
-package al.crystal.conferenceApp.resource;
+package al.crystal.conferenceApp.controller;
 
 import al.crystal.conferenceApp.LoginUser;
 import al.crystal.conferenceApp.model.Organiser;
@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "")
@@ -26,7 +25,7 @@ public class UsersResource {
     }
 
     @GetMapping("/users/{id}")
-    public User findUserById(@PathVariable UUID id){
+    public User findUserById(@PathVariable Long id){
         return usersService.getUserById(id);
     }
 
@@ -69,7 +68,7 @@ public class UsersResource {
     }
 
     @DeleteMapping(value = "/users/delete/{id}")
-    public List<User> deleteUser(@PathVariable UUID id){
+    public List<User> deleteUser(@PathVariable Long id){
          return this.usersService.deleteUser(id);
     }
 

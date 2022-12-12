@@ -58,7 +58,7 @@ public class UsersService {
     }
     public List<Participant> getAllParticipants(){return this.participantRepository.findAll();}
     public List<Organiser> getAllOrganisers(){return this.organiserRepository.findAll();}
-    public User getUserById(UUID id) {
+    public User getUserById(Long id) {
         return this.userRepository.findById(id).orElse(null);
     }
     public User getUserByEmail(String email) {
@@ -68,7 +68,7 @@ public class UsersService {
     public User getUserByEmailAndPassword(String email, String password) {
         return this.userRepository.findByEmailAndPassword(email, password);
     }
-    public List<User> deleteUser(UUID id){
+    public List<User> deleteUser(Long id){
         this.userRepository.deleteById(id);
         return this.userRepository.findAll();
     }

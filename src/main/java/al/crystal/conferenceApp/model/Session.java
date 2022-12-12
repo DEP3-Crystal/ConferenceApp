@@ -1,6 +1,7 @@
 package al.crystal.conferenceApp.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,30 +9,34 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity(name = "session")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Session {
     @Id
-    private UUID id;
+    private long id;
     private String title;
     private String description;
-    private String ype;
+    private String type;
     private int capacity;
     private Date startTime;
     private Date endTime;
 
     @ManyToOne
-    @JoinColumn(name = "track_id", nullable = false)
+    @JoinColumn(name = "track_id", nullable = true)
     private Track track;
 
+//    @ManyToOne
+//    @JoinColumn(name = "event_id", nullable = false)
+//    private Event event1;
+
     @ManyToMany
-    @JoinTable(name="session_speaker",
-            joinColumns=@JoinColumn(name="session_id"),
-            inverseJoinColumns=@JoinColumn(name="speaker_id")
+    @JoinTable(name = "session_speaker",
+            joinColumns = @JoinColumn(name = "session_id"),
+            inverseJoinColumns = @JoinColumn(name = "speaker_id")
     )
     Set<Speaker> speakers;
 
