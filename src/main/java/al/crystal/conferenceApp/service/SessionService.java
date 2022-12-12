@@ -7,6 +7,8 @@ import al.crystal.conferenceApp.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -37,5 +39,15 @@ public class SessionService {
 
     public Session getSession(Long id) {
         return sessionRepository.getReferenceById(id);
+    }
+
+    public List<Session> getSessionsByDate(String date) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
+        return sessionRepository.findSessionsByStartTime(localDate);
+    }
+
+    public List<Session> getAllSessions() {
+        return sessionRepository.findAll();
     }
 }
