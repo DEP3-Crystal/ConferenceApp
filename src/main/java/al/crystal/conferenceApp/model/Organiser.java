@@ -1,12 +1,10 @@
 package al.crystal.conferenceApp.model;
-
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +21,7 @@ public class Organiser extends User {
     private String tweeterUrl;
     private String facebookUrl;
     private String instagramUrl;
-    @OneToMany(mappedBy = "organiser")
+    @OneToMany//(mappedBy = "organiser")
     private List<Event> events;
     public Organiser(UUID id, String firstName, String lastName, String email, String password, Type userType,
                      String companyName,

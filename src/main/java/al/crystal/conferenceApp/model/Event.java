@@ -1,8 +1,10 @@
 package al.crystal.conferenceApp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,6 +17,11 @@ import java.util.UUID;
 @Entity(name = "event")
 public class Event {
     @Id
+    @Column(name = "id", unique = true)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name ="UUID",
+            strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
     private String title;
     private Date startDay;
@@ -23,10 +30,11 @@ public class Event {
     private boolean status;
     private int capacity;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private Organiser organiser;
 
     @OneToMany(mappedBy = "event")
     private List<Track> tracks;
+
 
 }

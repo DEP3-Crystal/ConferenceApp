@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "")
 public class UsersResource {
 
     @Autowired
@@ -59,6 +59,7 @@ public class UsersResource {
     }
 
     @PostMapping(value="/login")
+    @CrossOrigin(origins = "http://localhost:4200")
     public User loginUser(@RequestBody LoginUser loginUser){
         User ifExist = null;
         if(loginUser.getEmail() !=null && loginUser.getEmail() !=null){
