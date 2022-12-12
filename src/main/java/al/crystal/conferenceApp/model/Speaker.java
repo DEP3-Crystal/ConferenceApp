@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +14,8 @@ import java.util.UUID;
 @Entity(name = "speaker")
 public class Speaker {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private String name;
     private String lastName;
     private String companyName;
@@ -26,12 +26,13 @@ public class Speaker {
     private String facebookUrl;
     private String instagramUrl;
     @ManyToMany
-    @JoinTable(name="session_speaker",
-            joinColumns=@JoinColumn(name="speaker_id"),
-            inverseJoinColumns=@JoinColumn(name="session_id")
+    @JoinTable(name = "session_speaker",
+            joinColumns = @JoinColumn(name = "speaker_id"),
+            inverseJoinColumns = @JoinColumn(name = "session_id")
     )
     private Set<Session> sessions;
 
     @OneToMany(mappedBy = "speaker")
     private List<SpeakerRate> ratings;
+
 }

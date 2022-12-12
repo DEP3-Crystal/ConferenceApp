@@ -1,5 +1,6 @@
 package al.crystal.conferenceApp.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @DiscriminatorValue(value = "P") //Type.Values.PARTICIPANT
 public class Participant extends User {
-
     private int participantNumber;
 
     @OneToMany(mappedBy = "participant")
@@ -24,4 +24,5 @@ public class Participant extends User {
 
     @OneToMany(mappedBy = "participantSession")
     private List<ParticipantSession> participantSessionList;
+
 }
