@@ -1,21 +1,30 @@
-package al.crystal.conferenceApp.model;
+package al.crystal.conferenceapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "events")
+@Builder
 public class Event {
     @Id
-    private UUID id;
+    @Column(name = "id", unique = true)
+//    @GeneratedValue(generator = "UUID")
+//    @GenericGenerator(
+//            name ="UUID",
+//            strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
     private String title;
     private Date startDay;
     private Date endDay;
@@ -25,11 +34,13 @@ public class Event {
     //New, Ongoing, Ended
     private int eventStatus;
     private int capacity;
+    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "organiser_id", nullable = false)
-    private User organiser;
+    @JoinColumn(name = "user_id")
+    private Organiser organiser;
 
-    @OneToMany(mappedBy = "event")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "event",cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private List<Track> tracks;
 
     @ManyToMany

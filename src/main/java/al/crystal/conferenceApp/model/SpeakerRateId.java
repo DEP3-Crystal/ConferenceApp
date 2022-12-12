@@ -13,7 +13,7 @@ import java.util.UUID;
 @Embeddable
 public class SpeakerRateId implements Serializable {
 
-    private UUID userId;
-    private UUID speakerId;
+    private long userId;
+    private long speakerId;
 
 }

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +14,8 @@ import java.util.UUID;
 @Entity(name = "speaker")
 public class Speaker {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private String name;
     private String lastName;
     private String companyName;
@@ -34,4 +34,17 @@ public class Speaker {
 
     @OneToMany(mappedBy = "speaker")
     private List<SpeakerRate> ratings;
+
+    public Speaker(String name, String lastName, String companyName, String biography,
+                   String title, String linkedinUrl, String tweeterUrl, String facebookUrl, String instagramUrl) {
+        this.name = name;
+        this.lastName = lastName;
+        this.companyName = companyName;
+        this.biography = biography;
+        this.title = title;
+        this.linkedinUrl = linkedinUrl;
+        this.tweeterUrl = tweeterUrl;
+        this.facebookUrl = facebookUrl;
+        this.instagramUrl = instagramUrl;
+    }
 }

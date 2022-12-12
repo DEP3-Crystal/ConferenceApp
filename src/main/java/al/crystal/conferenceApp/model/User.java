@@ -1,54 +1,59 @@
 package al.crystal.conferenceApp.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
+import java.io.Serializable;
 import java.util.UUID;
 
-
+@JsonSubTypes(
+        {
+                @JsonSubTypes.Type(value = Organiser.class, name = "organiser"),
+                @JsonSubTypes.Type(value = Participant.class, name = "participant"),
+        })
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+        ,defaultImpl = Participant.class
+)
 @Entity
-@Table(name = "user")
-//@Inheritance(strategy = InheritanceType.JOINED)
-//@DiscriminatorColumn(name = "type",
-//        discriminatorType = DiscriminatorType.STRING)
+//@Table(name = "user")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "type",
+        discriminatorType = DiscriminatorType.STRING)
 @Data
-public class User {
+@AllArgsConstructor
+public abstract class User implements Serializable {
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @GeneratedValue(generator = "UUID")
+//    @GenericGenerator(
+//            name ="UUID",
+//            strategy = "org.hibernate.id.UUIDGenerator")
+//    @Column(name = "id", updatable = false, nullable = false,columnDefinition = "BINARY(16)", unique = true)
+    @Column(name = "id",unique = true)
     @Id
-    private UUID id;
+    private long id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
-    //private Type userType;
+    private Type userType;
+    protected User(){}
 
 
-    //Added from Organiser, to use when creating an Event as an Organiser
-    private String companyName;
-    private String biography;
-    private String linkedinUrl;
-    private String tweeterUrl;
-    private String facebookUrl;
-    private String instagramUrl;
-
-    @OneToMany(mappedBy = "organiser")
-    List<Event> organisedEvents;
-
-
-    @ManyToMany
-    @JoinTable(name = "participant_event",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_id")
-    )
-    List<Event> participatedEvents;
-
-
-
-    @OneToMany(mappedBy = "user")
-    private List<SpeakerRate> speakerRatings;
-
-    @OneToMany(mappedBy = "participantSession")
-    private List<ParticipantSession> participantSessionList;
-
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 }
