@@ -44,10 +44,8 @@ public class Event {
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    List<User> participants;
-
+    List<Participant> participants;
     private String eventImage;
-
     private String description;
 
 }
