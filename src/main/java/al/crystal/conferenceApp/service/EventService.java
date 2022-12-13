@@ -16,8 +16,6 @@ public class EventService {
     EventRepository eventRepository;
 
 
-    @OneToMany(mappedBy = "event")
-    private List<Track> tracks;
 
     public String saveEvent(EventDTO event) throws Exception {
 
@@ -59,7 +57,6 @@ public class EventService {
             existingEvent.setEventStatus(event.getEventStatus());
             existingEvent.setCapacity(event.getCapacity());
             existingEvent.setOrganiser(event.getOrganiser());
-            existingEvent.setTracks(event.getTracks());
             this.eventRepository.save(existingEvent);
         }
         return this.getAllEvents();

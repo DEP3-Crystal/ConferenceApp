@@ -1,6 +1,5 @@
 package al.crystal.conferenceApp.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,10 +24,6 @@ public class Track implements Serializable {
     private String roomLocation;
     private String roomType;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
 
     @OneToMany(mappedBy = "track")
     private List<Session> sessions;

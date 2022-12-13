@@ -16,7 +16,6 @@ public class EventDTO {
     private Date startDay;
     private Date endDay;
     private String location;
-    private boolean status;
     private int capacity;
     private Organiser organiser;
 

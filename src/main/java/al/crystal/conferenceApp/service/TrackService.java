@@ -15,7 +15,6 @@ public class TrackService {
     public String createTrack(TrackDTO trackDTO) {
         Track newTrack = Track.builder()
                 .trackName(trackDTO.getTrackName())
-                .event(trackDTO.getEvent())
                 .roomLocation(trackDTO.getRoomLocation())
                 .roomType(trackDTO.getRoomType()).build();
         trackRepository.save(newTrack);

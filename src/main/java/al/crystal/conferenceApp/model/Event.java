@@ -35,16 +35,13 @@ public class Event {
     @JoinColumn(name = "user_id")
     private Organiser organiser;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Track> tracks;
 
     @ManyToMany
     @JoinTable(name = "participant_event",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    List<Participant> participants;
+    private List<Participant> participants;
     private String eventImage;
     private String description;
 

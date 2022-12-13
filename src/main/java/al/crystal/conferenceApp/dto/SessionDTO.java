@@ -1,5 +1,6 @@
 package al.crystal.conferenceApp.dto;
 
+import al.crystal.conferenceApp.model.Event;
 import al.crystal.conferenceApp.model.Track;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +20,6 @@ public class SessionDTO {
     private Date startTime;
     private Date endTime;
     private Track track;
+    private Event event;
 
 }

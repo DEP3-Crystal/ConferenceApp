@@ -30,6 +30,9 @@ public class Session {
     @JoinColumn(name = "track_id", nullable = true)
     private Track track;
 
+    @ManyToOne
+    private Event event;
+
     @ManyToMany
     @JoinTable(name = "session_speaker",
             joinColumns = @JoinColumn(name = "session_id"),
