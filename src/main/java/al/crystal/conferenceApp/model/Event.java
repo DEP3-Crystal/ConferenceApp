@@ -47,7 +47,7 @@ public class Event {
     List<User> participants;
 
     private String eventImage;
-    private String summary;
+
     private String description;
 
 }

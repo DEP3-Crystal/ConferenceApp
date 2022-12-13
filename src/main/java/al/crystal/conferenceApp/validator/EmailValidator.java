@@ -25,9 +25,6 @@ public class EmailValidator {
                 "aliceadsl", "virgilio", "home", "qq", "telenet", "me", "voila", "planet", "tin", "ntlworld", "arcor",
                 "frontiernet", "hetnet", "zonnet", "club-internet", "juno", "optusnet", "blueyonder", "bluewin",
                 "skynet", "sympatico", "windstream", "mac", "centurytel", "chello", "aim", "icloud");
-        for (String domainName : domainNames) {
-            return (email.toLowerCase().contains(domainName));
-        }
-        return false;
+       return domainNames.stream().anyMatch(s -> s.toLowerCase().contains(email));
     }
 }
