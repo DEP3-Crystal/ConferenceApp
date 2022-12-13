@@ -5,6 +5,7 @@ import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -48,6 +49,6 @@ public class SessionService {
     }
 
     public List<Session> getAllSessions() {
-        return sessionRepository.findAll();
+        return sessionRepository.findAll(Sort.by("startTime"));
     }
 }
