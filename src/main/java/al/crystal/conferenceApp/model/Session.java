@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -17,17 +17,18 @@ import java.util.Set;
 @Builder
 public class Session {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String title;
     @Column(columnDefinition = "TEXT")
     private String description;
     private String type;
     private int capacity;
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     @ManyToOne
-    @JoinColumn(name = "track_id", nullable = true)
+    @JoinColumn(name = "track_id", nullable = false)
     private Track track;
 
     @ManyToOne
@@ -38,7 +39,7 @@ public class Session {
             joinColumns = @JoinColumn(name = "session_id"),
             inverseJoinColumns = @JoinColumn(name = "speaker_id")
     )
-    Set<Speaker> speakers;
+    private List<Speaker> speakers;
 
     @OneToMany(mappedBy = "session")
     private List<ParticipantSession> sessionRatings;

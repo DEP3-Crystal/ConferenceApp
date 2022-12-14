@@ -1,6 +1,7 @@
 package al.crystal.conferenceApp.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,11 +13,12 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "speaker")
+@Builder
 public class Speaker {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String name;
+    private String firstName;
     private String lastName;
     private String companyName;
     private String biography;

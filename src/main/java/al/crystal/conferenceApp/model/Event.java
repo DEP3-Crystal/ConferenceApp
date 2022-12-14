@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String title;
-    private Date startDay;
-    private Date endDay;
+    private LocalDate startDay;
+    private LocalDate endDay;
     private String location;
     //Status Open or Restricted
     private boolean participation;

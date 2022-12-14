@@ -13,15 +13,12 @@ import java.util.List;
 @Service
 public class EventService {
     @Autowired
-    EventRepository eventRepository;
+   private EventRepository eventRepository;
 
 
 
-    public String saveEvent(EventDTO event) throws Exception {
+    public Event saveEvent(EventDTO event) throws Exception {
 
-        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
-            throw new Exception("not done");
-        }
         Event newEvent = Event.builder()
                 .title(event.getTitle())
                 .startDay(event.getStartDay())
@@ -30,8 +27,8 @@ public class EventService {
                 .capacity(event.getCapacity())
                 .organiser(event.getOrganiser())
                 .build();
-        this.eventRepository.save(newEvent);
-        return "Saved";
+       return this.eventRepository.save(newEvent);
+
     }
 
     public List<Event> getAllEvents() {

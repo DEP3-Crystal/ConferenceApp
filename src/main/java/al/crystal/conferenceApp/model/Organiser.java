@@ -41,4 +41,18 @@ public class Organiser extends User implements Serializable {
         this.facebookUrl = facebookUrl;
         this.instagramUrl = instagramUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Organiser{" +
+                super.toString()+
+                "companyName='" + companyName + '\'' +
+                ", biography='" + biography + '\'' +
+                ", linkedinUrl='" + linkedinUrl + '\'' +
+                ", tweeterUrl='" + tweeterUrl + '\'' +
+                ", facebookUrl='" + facebookUrl + '\'' +
+                ", instagramUrl='" + instagramUrl + '\'' +
+//                ", events=" + events +
+                '}';
+    }
 }
