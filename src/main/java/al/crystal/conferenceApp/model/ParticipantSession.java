@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,5 +27,5 @@ public class ParticipantSession {
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
-    private Participant participantSession;
+    private User participantSession;
 }

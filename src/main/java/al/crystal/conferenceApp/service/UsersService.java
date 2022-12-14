@@ -1,5 +1,7 @@
 package al.crystal.conferenceApp.service;
 
+import al.crystal.conferenceApp.dto.UserDto;
+import al.crystal.conferenceApp.mapper.UserMapper;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.model.Participant;
 import al.crystal.conferenceApp.model.User;
@@ -10,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UsersService {
@@ -29,7 +30,6 @@ public class UsersService {
             organiser.setLastName(user.getLastName());
             organiser.setEmail(user.getEmail());
             organiser.setPassword(user.getPassword());
-            organiser.setUserType(user.getUserType());
             organiser.setCompanyName(((Organiser) user).getCompanyName());
             organiser.setBiography(((Organiser) user).getBiography());
             organiser.setLinkedinUrl(((Organiser) user).getLinkedinUrl());
@@ -44,7 +44,6 @@ public class UsersService {
             participant.setLastName(user.getLastName());
             participant.setEmail(user.getEmail());
             participant.setPassword(user.getPassword());
-            participant.setUserType(user.getUserType());
             participant.setParticipantNumber(((Participant) user).getParticipantNumber());
             participant.setParticipantSessionList(((Participant) user).getParticipantSessionList());
             participant.setSpeakerRatings(((Participant) user).getSpeakerRatings());
@@ -56,11 +55,15 @@ public class UsersService {
     public List<User> getAll() {
         return this.userRepository.findAll();
     }
-    public List<Participant> getAllParticipants(){return this.participantRepository.findAll();}
-    public List<Organiser> getAllOrganisers(){return this.organiserRepository.findAll();}
-    public User getUserById(UUID id) {
-        return this.userRepository.findById(id).orElse(null);
+
+    public List<Participant> getAllParticipants() {
+        return this.participantRepository.findAll();
     }
+
+    public List<Organiser> getAllOrganisers() {
+        return this.organiserRepository.findAll();
+    }
+
     public User getUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
@@ -68,20 +71,20 @@ public class UsersService {
     public User getUserByEmailAndPassword(String email, String password) {
         return this.userRepository.findByEmailAndPassword(email, password);
     }
-    public List<User> deleteUser(UUID id){
+
+    public List<User> deleteUser(Long id) {
         this.userRepository.deleteById(id);
         return this.userRepository.findAll();
     }
 
-    public List<User> updateUser(User user){
+    public List<User> updateUser(User user) {
         if (user instanceof Organiser) {
             Organiser existingOrganiser = this.organiserRepository.findById(user.getId()).orElse(null);
-            if(existingOrganiser != null) {
+            if (existingOrganiser != null) {
                 existingOrganiser.setFirstName(user.getFirstName());
                 existingOrganiser.setLastName(user.getLastName());
                 existingOrganiser.setEmail(user.getEmail());
                 existingOrganiser.setPassword(user.getPassword());
-                existingOrganiser.setUserType(user.getUserType());
                 existingOrganiser.setCompanyName(((Organiser) user).getCompanyName());
                 existingOrganiser.setBiography(((Organiser) user).getBiography());
                 existingOrganiser.setLinkedinUrl(((Organiser) user).getLinkedinUrl());
@@ -92,12 +95,11 @@ public class UsersService {
             }
         } else if (user instanceof Participant) {
             Participant existingParticipant = this.participantRepository.findById(user.getId()).orElse(null);
-            if(existingParticipant != null) {
+            if (existingParticipant != null) {
                 existingParticipant.setFirstName(user.getFirstName());
                 existingParticipant.setLastName(user.getLastName());
                 existingParticipant.setEmail(user.getEmail());
                 existingParticipant.setPassword(user.getPassword());
-                existingParticipant.setUserType(user.getUserType());
                 existingParticipant.setParticipantNumber(((Participant) user).getParticipantNumber());
                 existingParticipant.setParticipantSessionList(((Participant) user).getParticipantSessionList());
                 existingParticipant.setSpeakerRatings(((Participant) user).getSpeakerRatings());
@@ -105,6 +107,27 @@ public class UsersService {
             }
         }
         return this.getAll();
+    }
+
+    public boolean createUser(User newUser) {
+        try {
+            userRepository.saveAndFlush(newUser);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).get();
+    }
+
+    public UserDto loginUser(String email, String password) {
+        User byEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
+        if (byEmailAndPassword != null)
+            return UserMapper.toDto(byEmailAndPassword);
+        else
+            return null;
+    }
 
 }

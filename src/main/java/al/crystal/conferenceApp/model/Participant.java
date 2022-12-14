@@ -17,19 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 @DiscriminatorValue(value = "P") //Type.Values.PARTICIPANT
 public class Participant extends User {
-//    @JsonProperty("participantNumber")
     private int participantNumber;
 
     @OneToMany(mappedBy = "participant")
-//    @JsonProperty("speakerRatings")
     private List<SpeakerRate> speakerRatings;
 
     @OneToMany(mappedBy = "participantSession")
-//    @JsonProperty("participantSessionList")
     private List<ParticipantSession> participantSessionList;
-    {
-        this.participantNumber = participantNumber;
-        this.speakerRatings = speakerRatings;
-        this.participantSessionList = participantSessionList;
-    }
+
 }
