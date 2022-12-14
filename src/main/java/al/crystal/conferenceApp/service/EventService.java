@@ -17,11 +17,11 @@ public class EventService {
 
 
 
-    public String saveEvent(EventDTO event) throws Exception {
+    public String saveEvent(EventDTO event)  {
 
-        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
-            throw new Exception("not done");
-        }
+//        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
+//            throw new Exception("not done");
+//        }
         Event newEvent = Event.builder()
                 .title(event.getTitle())
                 .startDay(event.getStartDay())

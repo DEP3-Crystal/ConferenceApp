@@ -1,13 +1,15 @@
 package al.crystal.conferenceApp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,8 +24,10 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String title;
-    private Date startDay;
-    private Date endDay;
+    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
+    private LocalDate startDay;
+    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
+    private LocalDate endDay;
     private String location;
     //Status Open or Restricted
     private boolean participation;

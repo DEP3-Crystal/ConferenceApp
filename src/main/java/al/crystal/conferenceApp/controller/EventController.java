@@ -36,12 +36,8 @@ public class EventController {
 
     @PostMapping("/add")
     public String createEvent(@RequestBody EventDTO eventDTO) {
-
-        try {
             return eventService.saveEvent(eventDTO);
-        } catch (Exception e) {
-            throw new RuntimeException("not done");
-        }
+
     }
 
 
