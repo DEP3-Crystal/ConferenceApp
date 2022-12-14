@@ -19,13 +19,16 @@ public class SessionService {
     private SessionRepository sessionRepository;
 
     public String createSession(SessionDTO sessionDTO) {
-        Session newSession = Session.builder().description(sessionDTO.getDescription())
+        Session newSession = Session.builder()
+                .description(sessionDTO.getDescription())
                 .endTime(sessionDTO.getEndTime())
                 .startTime(sessionDTO.getStartTime())
                 .title(sessionDTO.getTitle())
                 .capacity(sessionDTO.getCapacity())
                 .track(sessionDTO.getTrack())
+                .event(sessionDTO.getEvent())
                 .type(sessionDTO.getType())
+                .speakers(sessionDTO.getSpeakers())
                 .build();
         sessionRepository.save(newSession);
         return "done";
@@ -45,10 +48,38 @@ public class SessionService {
     public List<Session> getSessionsByDate(String date) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
+        System.out.println("Data formatted1:"+localDate);
         return sessionRepository.findSessionsByStartTime(localDate);
     }
+
+    private List<Session> getSessionsByLocation(String location) {
+        return sessionRepository.findAllByTrackRoomLocation(location);
+    }
+
+    private List<Session> getSessionsByDateAndLocation(String date, String location) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
+        System.out.println("Data formatted2:"+localDate);
+        return sessionRepository.findAllByStartTimeAndTrackRoomLocation(localDate, location);
+    }
+
 
     public List<Session> getAllSessions() {
         return sessionRepository.findAll(Sort.by("startTime"));
     }
+
+
+    public List<Session> getSessions(String date, String location) {
+        System.out.println("Location passed: "+location);
+        System.out.println("Date passed: "+date);
+        if (date != null && location == null) {
+            return getSessionsByDate(date);
+        } else if (date == null && location != null) {
+            return getSessionsByLocation(location);
+        } else if (date != null && location != null) {
+            return getSessionsByDateAndLocation(date, location);
+        } else
+            return getAllSessions();
+    }
+
 }
