@@ -25,7 +25,6 @@ public class EventService {
         newEvent.setStartDay(event.getStartDay());
         newEvent.setEndDay(event.getEndDay());
         newEvent.setLocation(event.getLocation());
-        newEvent.setStatus(event.isStatus());
         newEvent.setCapacity(event.getCapacity());
         newEvent.setOrganiser(event.getOrganiser());
         newEvent.setTracks(event.getTracks());
@@ -53,7 +52,6 @@ public class EventService {
                 existingEvent.setStartDay(event.getStartDay());
                 existingEvent.setEndDay(event.getEndDay());
                 existingEvent.setLocation(event.getLocation());
-                existingEvent.setStatus(event.isStatus());
                 existingEvent.setCapacity(event.getCapacity());
                 existingEvent.setOrganiser(event.getOrganiser());
                 existingEvent.setTracks(event.getTracks());

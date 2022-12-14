@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class Event {
     @Id
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    private UUID id;
     private String title;
     private Date startDay;
     private Date endDay;
