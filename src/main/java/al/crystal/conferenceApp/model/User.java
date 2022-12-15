@@ -20,8 +20,7 @@ import java.io.Serializable;
         property = "type"
         , defaultImpl = Participant.class
 )
-@Entity
-
+@Entity(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 @Data

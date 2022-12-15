@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.List;
 
-@Entity(name = "organiser")
+@Entity(name = "organisers")
 @DiscriminatorValue(value = "O")
 @Getter
 @Setter
