@@ -37,14 +37,13 @@ public class Session {
 
     @ManyToOne
     private Event event;
-    @JsonIgnore
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "session_speaker",
             joinColumns = @JoinColumn(name = "session_id"),
             inverseJoinColumns = @JoinColumn(name = "speaker_id")
     )
-
-    Set<Speaker> speakers;
+    private Set<Speaker> speakers;
 
     @OneToMany(mappedBy = "session")
     private List<ParticipantSession> sessionRatings;

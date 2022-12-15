@@ -35,7 +35,7 @@ public class EventController {
     }
 
     @PostMapping("/add")
-    public String createEvent(@RequestBody EventDTO eventDTO) {
+    public Event createEvent(@RequestBody EventDTO eventDTO) {
             return eventService.saveEvent(eventDTO);
 
     }

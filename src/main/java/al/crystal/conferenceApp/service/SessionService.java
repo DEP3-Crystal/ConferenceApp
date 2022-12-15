@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SessionService {
@@ -82,4 +83,18 @@ public class SessionService {
             return getAllSessions();
     }
 
+    public List<Session> saveSessions(List<SessionDTO> sessionDTOS){
+        List<Session> collect = sessionDTOS.stream().map(sessionDTO -> Session.builder()
+                .description(sessionDTO.getDescription())
+                .endTime(sessionDTO.getEndTime())
+                .startTime(sessionDTO.getStartTime())
+                .title(sessionDTO.getTitle())
+                .capacity(sessionDTO.getCapacity())
+                .track(sessionDTO.getTrack())
+                .event(sessionDTO.getEvent())
+                .type(sessionDTO.getType())
+                .speakers(sessionDTO.getSpeakers())
+                .build()).collect(Collectors.toList());
+        return sessionRepository.saveAll(collect);
+    }
 }

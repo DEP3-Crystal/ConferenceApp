@@ -5,6 +5,7 @@ import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.model.Track;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class SessionDTO {
 
     private String title;
@@ -29,5 +31,6 @@ public class SessionDTO {
     private Track track;
     private Event event;
     private Set<Speaker> speakers;
+
 
 }

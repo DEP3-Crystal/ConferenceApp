@@ -17,7 +17,7 @@ public class EventService {
 
 
 
-    public String saveEvent(EventDTO event)  {
+    public Event saveEvent(EventDTO event)  {
 
 //        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
 //            throw new Exception("not done");
@@ -30,8 +30,8 @@ public class EventService {
                 .capacity(event.getCapacity())
                 .organiser(event.getOrganiser())
                 .build();
-        this.eventRepository.save(newEvent);
-        return "Saved";
+
+        return this.eventRepository.save(newEvent);
     }
 
     public List<Event> getAllEvents() {
