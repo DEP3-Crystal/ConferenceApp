@@ -3,7 +3,7 @@ package al.crystal.conferenceApp.controller;
 
 import al.crystal.conferenceApp.dto.TrackDTO;
 import al.crystal.conferenceApp.model.Track;
-import al.crystal.conferenceApp.service.TrackService;
+import al.crystal.conferenceApp.validator.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,11 +1,11 @@
 package al.crystal.conferenceApp.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import al.crystal.conferenceApp.model.pivote.ParticipantSession;
+import al.crystal.conferenceApp.model.pivote.SpeakerRate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;

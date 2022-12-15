@@ -2,7 +2,7 @@ package al.crystal.conferenceApp.controller;
 
 import al.crystal.conferenceApp.dto.OrganizerDTO;
 import al.crystal.conferenceApp.model.Organiser;
-import al.crystal.conferenceApp.service.OrganizerService;
+import al.crystal.conferenceApp.validator.service.OrganizerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

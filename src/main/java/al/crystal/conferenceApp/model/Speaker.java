@@ -1,5 +1,8 @@
 package al.crystal.conferenceApp.model;
 
+import al.crystal.conferenceApp.model.pivote.SessionSpeaker;
+import al.crystal.conferenceApp.model.pivote.SpeakerRate;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity(name = "speaker")
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Speaker {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,14 +31,24 @@ public class Speaker {
     private String tweeterUrl;
     private String facebookUrl;
     private String instagramUrl;
-    @ManyToMany
-    @JoinTable(name = "session_speaker",
-            joinColumns = @JoinColumn(name = "speaker_id"),
-            inverseJoinColumns = @JoinColumn(name = "session_id")
-    )
-    private Set<Session> sessions;
+
+    @OneToMany(mappedBy ="speaker",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+//    @JsonBackReference
+    private Set<SessionSpeaker> speakerSet;
 
     @OneToMany(mappedBy = "speaker")
     private List<SpeakerRate> ratings;
 
+    public Speaker(String firstName, String lastName, String companyName, String biography, String title, String linkedinUrl, String tweeterUrl, String facebookUrl, String instagramUrl) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.companyName = companyName;
+        this.biography = biography;
+        this.title = title;
+        this.linkedinUrl = linkedinUrl;
+        this.tweeterUrl = tweeterUrl;
+        this.facebookUrl = facebookUrl;
+        this.instagramUrl = instagramUrl;
+    }
 }

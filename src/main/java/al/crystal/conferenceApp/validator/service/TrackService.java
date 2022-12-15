@@ -1,4 +1,4 @@
-package al.crystal.conferenceApp.service;
+package al.crystal.conferenceApp.validator.service;
 
 import al.crystal.conferenceApp.dto.TrackDTO;
 import al.crystal.conferenceApp.model.Track;

@@ -72,11 +72,11 @@ public class FakerDataAccess {
                 .type("none")
                 .build()).collect(Collectors.toList());
 
-        sessionData.stream().forEach(sessionDTO -> {
-            sessionDTO.setTrack(tracks.get(faker.random().nextInt(tracks.size())));
-            sessionDTO.setSpeakers( speakers.subList(faker.random().nextInt(1),
-                    faker.random().nextInt(speakers.size())));
-        });
+//        sessionData.stream().forEach(sessionDTO -> {
+//            sessionDTO.setTrack(tracks.get(faker.random().nextInt(tracks.size())));
+//            sessionDTO.setSpeakers( speakers.subList(faker.random().nextInt(1),
+//                    faker.random().nextInt(speakers.size())));
+//        });
 
         return sessionData;
     }

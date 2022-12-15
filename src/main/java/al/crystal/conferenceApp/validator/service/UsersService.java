@@ -1,4 +1,4 @@
-package al.crystal.conferenceApp.service;
+package al.crystal.conferenceApp.validator.service;
 
 import al.crystal.conferenceApp.dto.UserDto;
 import al.crystal.conferenceApp.mapper.UserMapper;

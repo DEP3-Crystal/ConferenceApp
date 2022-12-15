@@ -1,5 +1,8 @@
-package al.crystal.conferenceApp.model;
+package al.crystal.conferenceApp.model.pivote;
 
+import al.crystal.conferenceApp.model.Participant;
+import al.crystal.conferenceApp.model.Speaker;
+import al.crystal.conferenceApp.model.id.SpeakerRateId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

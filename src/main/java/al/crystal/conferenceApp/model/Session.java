@@ -1,9 +1,14 @@
 package al.crystal.conferenceApp.model;
 
+import al.crystal.conferenceApp.model.pivote.ParticipantSession;
+import al.crystal.conferenceApp.model.pivote.SessionSpeaker;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +20,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -24,7 +33,9 @@ public class Session {
     private String description;
     private String type;
     private int capacity;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endTime;
 
     @ManyToOne
@@ -33,13 +44,12 @@ public class Session {
 
     @ManyToOne
     private Event event;
+    //    @JsonIgnore
+//    @JsonBackReference
 
-    @ManyToMany
-    @JoinTable(name = "session_speaker",
-            joinColumns = @JoinColumn(name = "session_id"),
-            inverseJoinColumns = @JoinColumn(name = "speaker_id")
-    )
-    private List<Speaker> speakers;
+//    @OneToMany(mappedBy = "session")
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Speaker> sessionSpeakers;
 
     @OneToMany(mappedBy = "session")
     private List<ParticipantSession> sessionRatings;

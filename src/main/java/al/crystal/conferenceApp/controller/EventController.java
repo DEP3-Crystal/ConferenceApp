@@ -2,7 +2,7 @@ package al.crystal.conferenceApp.controller;
 
 import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.model.Event;
-import al.crystal.conferenceApp.service.EventService;
+import al.crystal.conferenceApp.validator.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping(value = "/events")
 public class EventController {
     @Autowired
-    EventService eventService;
+    private EventService eventService;
 
     @GetMapping(value = "/")
     public List<Event> getAllEvents() {
@@ -36,12 +36,8 @@ public class EventController {
 
     @PostMapping("/add")
     public Event createEvent(@RequestBody EventDTO eventDTO) {
+        return eventService.saveEvent(eventDTO);
 
-        try {
-            return eventService.saveEvent(eventDTO);
-        } catch (Exception e) {
-            throw new RuntimeException("not done");
-        }
     }
 
 

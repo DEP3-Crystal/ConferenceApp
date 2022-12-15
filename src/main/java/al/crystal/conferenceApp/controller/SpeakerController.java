@@ -1,7 +1,7 @@
 package al.crystal.conferenceApp.controller;
 
 import al.crystal.conferenceApp.model.Speaker;
-import al.crystal.conferenceApp.service.SpeakerService;
+import al.crystal.conferenceApp.validator.service.SpeakerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
