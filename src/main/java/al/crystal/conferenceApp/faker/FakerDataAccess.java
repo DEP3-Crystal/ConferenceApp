@@ -2,16 +2,13 @@ package al.crystal.conferenceApp.faker;
 
 import al.crystal.conferenceApp.dto.*;
 import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
+import al.crystal.conferenceApp.dto.speaker.SpeakerSessionRateDTO;
 import al.crystal.conferenceApp.mapper.ParticipantMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
-import al.crystal.conferenceApp.model.Event;
-import al.crystal.conferenceApp.model.Organiser;
-import al.crystal.conferenceApp.model.Speaker;
-import al.crystal.conferenceApp.model.Track;
-import al.crystal.conferenceApp.service.EventService;
-import al.crystal.conferenceApp.service.SessionService;
-import al.crystal.conferenceApp.service.SpeakerService;
-import al.crystal.conferenceApp.service.TrackService;
+import al.crystal.conferenceApp.mapper.SpeakerSessionRateMapper;
+import al.crystal.conferenceApp.model.*;
+import al.crystal.conferenceApp.repository.SpeakerRateRepo;
+import al.crystal.conferenceApp.service.*;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
@@ -40,6 +37,11 @@ public class FakerDataAccess {
     @Autowired
     private TrackService trackService;
 
+    @Autowired
+    private ParticipantService participantService;
+
+    @Autowired
+    private SpeakerRateRepo speakerRateRepo;
 
     FakeValuesService fakeValuesService = new FakeValuesService(
             new Locale("en-GB"), new RandomService());
@@ -135,9 +137,21 @@ public class FakerDataAccess {
                                 SpeakerMapper.Instance.speaker(speakerDTO), faker.random().nextInt(1, 5))
                 )
         ).collect(Collectors.toList());
-
     }
 
+
+    public List<SpeakerRate> createSpeakerRate(int numberOfParticipant,int numberOfSpeakers){
+        List<ParticipantDTO> participant = createParticipant(numberOfParticipant);
+        participantService.participants(participant);
+        List<Speaker> speakers = speakerList(numberOfSpeakers);
+        speakerService.saveListOfSpeaker(speakers);
+        List<SpeakerSessionRateDTO> speakerSessionRateDTOS = speakerRate(participant);
+        List<SpeakerRate> speakerRateList = speakerSessionRateDTOS.stream()
+                .map(SpeakerSessionRateMapper.Instance::speakerRate)
+                .collect(Collectors.toList());
+        return speakerRateRepo.saveAll(speakerRateList);
+
+    }
     public String email() {
         return fakeValuesService.bothify("????##@gmail.com");
     }

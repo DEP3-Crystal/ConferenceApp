@@ -1,4 +1,4 @@
-package al.crystal.conferenceApp.dto;
+package al.crystal.conferenceApp.dto.speaker;
 
 import al.crystal.conferenceApp.model.Participant;
 import al.crystal.conferenceApp.model.Speaker;

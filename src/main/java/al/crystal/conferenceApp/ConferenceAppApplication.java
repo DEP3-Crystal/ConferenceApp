@@ -1,14 +1,12 @@
 package al.crystal.conferenceApp;
 
 import al.crystal.conferenceApp.dto.ParticipantDTO;
-import al.crystal.conferenceApp.dto.SpeakerSessionRateDTO;
-import al.crystal.conferenceApp.dto.speaker.SpeakerRateDTO;
+import al.crystal.conferenceApp.dto.speaker.SpeakerSessionRateDTO;
 import al.crystal.conferenceApp.faker.FakerDataAccess;
 import al.crystal.conferenceApp.mapper.SpeakerSessionRateMapper;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.model.SpeakerRate;
-import al.crystal.conferenceApp.model.SpeakerRateId;
 import al.crystal.conferenceApp.repository.SpeakerRateRepo;
 import al.crystal.conferenceApp.service.*;
 import org.slf4j.Logger;
@@ -47,14 +45,6 @@ public class ConferenceAppApplication implements CommandLineRunner {
 
         fakerDataAccess.createSessions(10,6,15,organizer);
 
-        List<ParticipantDTO> participant = fakerDataAccess.createParticipant(50);
-        participantService.participants(participant);
-        List<Speaker> speakers = fakerDataAccess.speakerList(10);
-        speakerService.saveListOfSpeaker(speakers);
-        List<SpeakerSessionRateDTO> speakerSessionRateDTOS = fakerDataAccess.speakerRate(participant);
-        List<SpeakerRate> collect = speakerSessionRateDTOS.stream()
-                .map(speakerSessionRateDTO -> SpeakerSessionRateMapper.Instance.speakerRate(speakerSessionRateDTO))
-                .collect(Collectors.toList());
-        speakerRateRepo.saveAll(collect);
+        fakerDataAccess.createSpeakerRate(10,10);
     }
 }
