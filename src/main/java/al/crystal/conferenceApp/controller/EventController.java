@@ -4,12 +4,15 @@ import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.model.Event;
 import al.crystal.conferenceApp.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
 @RequestMapping(value = "/events")
 public class EventController {
+
     @Autowired
     EventService eventService;
 
@@ -34,12 +37,13 @@ public class EventController {
     }
 
     @PostMapping("/add")
-    public String createEvent(@RequestBody EventDTO eventDTO) {
+    public ResponseEntity<String> createEvent(@RequestBody EventDTO eventDTO) {
 
         try {
-            return eventService.saveEvent(eventDTO);
+            String response = eventService.saveEvent(eventDTO);
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
         } catch (Exception e) {
-            throw new RuntimeException("not done");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

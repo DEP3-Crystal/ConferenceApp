@@ -2,12 +2,10 @@ package al.crystal.conferenceApp.service;
 
 import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.model.Event;
-import al.crystal.conferenceApp.model.Track;
 import al.crystal.conferenceApp.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.OneToMany;
 import java.util.List;
 
 @Service
@@ -32,6 +30,7 @@ public class EventService {
                 .build();
         this.eventRepository.save(newEvent);
         return "Saved";
+//        return newEvent;
     }
 
     public List<Event> getAllEvents() {

@@ -3,12 +3,12 @@ package al.crystal.conferenceApp.controller;
 import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.repository.EventRepository;
+import al.crystal.conferenceApp.service.EventService;
+import al.crystal.conferenceApp.service.OrganizerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,12 +21,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-//@WebMvcTest(EventController.class)
+//@SpringBootTest
+//@AutoConfigureMockMvc
+@WebMvcTest(EventController.class)
 class EventControllerTest {
     @MockBean
     private EventRepository eventRepository;
+    @MockBean
+    private EventService eventService;
+    @MockBean
+    private OrganizerController organizerController;
+    @MockBean
+    private OrganizerService organizerService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -34,34 +40,36 @@ class EventControllerTest {
 
     @Test
     void shouldCreateEvent() throws Exception {
+        Organiser organizer = organizerService.getOrganizer(1L);
+        System.out.println(organizer);
         EventDTO eventDTO = new EventDTO(
                 "Python conference",
                 new Date(),
                 new Date(),
                 "Room nr1",
                 50,
-                new Organiser("jon",
-                        "doe",
-                        "jon@email.eu",
-                        "sd sd",
-                        "sas",
-                        "bio",
-                        "sas",
-                        "asa",
-                        "fb",
-                        "instut")
+                organizer
         );
 
         mockMvc.perform(
-                post("/events/add/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(eventDTO)))
-                .andExpect(status().isOk())
+                        post("/events/add/")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(eventDTO)))
+//                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
+                .andDo(print());
+
+        mockMvc.perform(
+                        post("/events/add/")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(null)))
+//                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 
     @Test
-    void getEventById() throws Exception {
+    void getEvents() throws Exception {
         mockMvc.perform(get("/events/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
