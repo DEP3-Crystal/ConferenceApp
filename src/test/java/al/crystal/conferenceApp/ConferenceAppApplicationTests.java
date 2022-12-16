@@ -14,6 +14,6 @@ class ConferenceAppApplicationTests {
 
     @Test
     void getUsers() {
-		assertTrue(true);
+//		assertTrue(true);
     }
 }
