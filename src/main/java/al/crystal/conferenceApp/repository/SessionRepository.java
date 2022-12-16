@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
-    @Query(value = "Select * from session s where DATE(s.start_time) =:startDate", nativeQuery = true)
+    @Query(value = "Select * from sessions s where DATE(s.start_time) =:startDate", nativeQuery = true)
     List<Session> findSessionsByStartTime(LocalDate startDate);
 }

@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Data
-@Entity(name = "participant")
+@Entity(name = "participants")
 @AllArgsConstructor
 @NoArgsConstructor
 @DiscriminatorValue(value = "P") //Type.Values.PARTICIPANT

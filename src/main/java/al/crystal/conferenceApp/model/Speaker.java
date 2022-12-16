@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "speaker")
+@Entity(name = "speakers")
 public class Speaker {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

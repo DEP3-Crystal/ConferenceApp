@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-@Entity(name = "session")
+@Entity(name = "sessions")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,7 +34,7 @@ public class Session {
     private Event event;
 
     @ManyToMany
-    @JoinTable(name = "session_speaker",
+    @JoinTable(name = "session_speakers",
             joinColumns = @JoinColumn(name = "session_id"),
             inverseJoinColumns = @JoinColumn(name = "speaker_id")
     )
