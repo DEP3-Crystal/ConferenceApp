@@ -1,7 +1,6 @@
 package al.crystal.conferenceApp.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Entity(name = "session")
 @Data
@@ -43,7 +41,7 @@ public class Session {
             joinColumns = @JoinColumn(name = "session_id"),
             inverseJoinColumns = @JoinColumn(name = "speaker_id")
     )
-    private Set<Speaker> speakers;
+    private List<Speaker> speakers;
 
     @OneToMany(mappedBy = "session")
     private List<ParticipantSession> sessionRatings;

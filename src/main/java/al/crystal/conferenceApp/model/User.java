@@ -28,9 +28,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class User implements Serializable {
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", unique = true)
-    @Id
     private long id;
     private String firstName;
     private String lastName;

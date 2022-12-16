@@ -1,52 +1,60 @@
 package al.crystal.conferenceApp;
 
-import al.crystal.conferenceApp.dto.EventDTO;
-import al.crystal.conferenceApp.dto.SessionDTO;
-import al.crystal.conferenceApp.dto.TrackDTO;
+import al.crystal.conferenceApp.dto.ParticipantDTO;
+import al.crystal.conferenceApp.dto.SpeakerSessionRateDTO;
+import al.crystal.conferenceApp.dto.speaker.SpeakerRateDTO;
 import al.crystal.conferenceApp.faker.FakerDataAccess;
-import al.crystal.conferenceApp.model.*;
+import al.crystal.conferenceApp.mapper.SpeakerSessionRateMapper;
+import al.crystal.conferenceApp.model.Organiser;
+import al.crystal.conferenceApp.model.Speaker;
+import al.crystal.conferenceApp.model.SpeakerRate;
+import al.crystal.conferenceApp.model.SpeakerRateId;
+import al.crystal.conferenceApp.repository.SpeakerRateRepo;
 import al.crystal.conferenceApp.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 //@Configuration
 //@EnableJpaRepositories(basePackages = "al.crystal.conferenceApp")
 public class ConferenceAppApplication implements CommandLineRunner {
+
     @Autowired
-    private EventService eventService;
+    private OrganizerService organizerService;
     @Autowired
-    private SessionService sessionService;
+    private SpeakerRateRepo speakerRateRepo;
+    @Autowired
+    private ParticipantService participantService;
     @Autowired
     private SpeakerService speakerService;
     @Autowired
-    private TrackService trackService;
-    @Autowired
-    private OrganizerService organizerService;
+    private FakerDataAccess fakerDataAccess;
     public static void main(String[] args) {
         SpringApplication.run(ConferenceAppApplication.class, args);
     }
-
+    Logger logger= LoggerFactory.getLogger(this.getClass().getName());
     @Override
     public void run(String... args) throws Exception {
-//        Organiser organizer = organizerService.getOrganizer(1L);
-//        System.out.println(organizer);
-//        FakerDataAccess fakerDataAccess=FakerDataAccess.getInstance();
-//        EventDTO event = fakerDataAccess.createEvent(1, organizer);
-//        System.out.println(event);
-//        Event event1 = eventService.saveEvent(event);
-//        List<TrackDTO> trackDTOS = fakerDataAccess.trackDTOList(3);
-//        System.out.println(trackDTOS);
-//        List<Track> tracks = trackService.saveTracks(trackDTOS);
-//        List<Speaker> speakers = fakerDataAccess.speakerList(3);
-//        System.out.println(speakers);
-//        List<Speaker> speakers1 = speakerService.saveListOfSpeaker(speakers);
-//        List<SessionDTO> sessionDTOS = fakerDataAccess.sessionList(3, event1, tracks, speakers1);
-//        List<Session> sessions = sessionService.saveSessions(sessionDTOS);
-//        System.out.println(sessions);
+        Organiser organizer = organizerService.getOrganizer(1L);
+        logger.info(organizer.toString());
+
+        fakerDataAccess.createSessions(10,6,15,organizer);
+
+        List<ParticipantDTO> participant = fakerDataAccess.createParticipant(50);
+        participantService.participants(participant);
+        List<Speaker> speakers = fakerDataAccess.speakerList(10);
+        speakerService.saveListOfSpeaker(speakers);
+        List<SpeakerSessionRateDTO> speakerSessionRateDTOS = fakerDataAccess.speakerRate(participant);
+        List<SpeakerRate> collect = speakerSessionRateDTOS.stream()
+                .map(speakerSessionRateDTO -> SpeakerSessionRateMapper.Instance.speakerRate(speakerSessionRateDTO))
+                .collect(Collectors.toList());
+        speakerRateRepo.saveAll(collect);
     }
 }

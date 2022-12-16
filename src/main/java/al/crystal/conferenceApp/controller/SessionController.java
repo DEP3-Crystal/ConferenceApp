@@ -26,9 +26,14 @@ public class SessionController {
     }
 
 
-    @GetMapping()
-    public List<Session> getSessions(@RequestParam(required = false) String date,
-                                     @RequestParam(required = false) String location) {
-        return this.sessionService.getSessions(date, location);
+//    @GetMapping()
+//    public List<Session> getSessions(@RequestParam(required = false) String date,
+//                                     @RequestParam(required = false) String location) {
+//        return this.sessionService.getSessions(date, location);
+//    }
+
+    @GetMapping
+    public List<SessionDTO> getSessions(){
+     return sessionService.getAllSessionDTOsFromSessionsList();
     }
 }

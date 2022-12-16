@@ -1,20 +1,19 @@
 package al.crystal.conferenceApp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "speaker")
 @Builder
+@ToString
 public class Speaker {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,7 +32,7 @@ public class Speaker {
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "speakers")
     private Set<Session> sessions;
 
-    @OneToMany(mappedBy = "speaker")
+    @OneToMany(mappedBy = "speaker", fetch = FetchType.EAGER)
     private List<SpeakerRate> ratings;
 
     public Speaker(String name, String lastName, String companyName, String biography, String title, String linkedinUrl, String tweeterUrl, String facebookUrl, String instagramUrl) {
@@ -47,4 +46,6 @@ public class Speaker {
         this.facebookUrl = facebookUrl;
         this.instagramUrl = instagramUrl;
     }
+
+
 }

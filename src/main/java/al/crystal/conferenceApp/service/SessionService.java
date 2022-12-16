@@ -1,6 +1,8 @@
 package al.crystal.conferenceApp.service;
 
 import al.crystal.conferenceApp.dto.SessionDTO;
+import al.crystal.conferenceApp.mapper.SessionMapper;
+import al.crystal.conferenceApp.mapper.SpeakerMapper;
 import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.repository.SessionRepository;
@@ -29,7 +31,7 @@ public class SessionService {
                 .track(sessionDTO.getTrack())
                 .event(sessionDTO.getEvent())
                 .type(sessionDTO.getType())
-                .speakers(sessionDTO.getSpeakers())
+//                .speakers(sessionDTO.getSpeakers())
                 .build();
         sessionRepository.save(newSession);
         return "done";
@@ -65,10 +67,14 @@ public class SessionService {
     }
 
 
+    public List<SessionDTO> getAllSessionDTOs() {
+        List<Session> sessionLis = sessionRepository.findAll(Sort.by("startTime"));
+        return sessionLis.stream().map(session -> SessionMapper.Instance.sessionToSessionDTO(session)).collect(Collectors.toList());
+    }
+
     public List<Session> getAllSessions() {
         return sessionRepository.findAll(Sort.by("startTime"));
     }
-
 
     public List<Session> getSessions(String date, String location) {
         System.out.println("Location passed: "+location);
@@ -81,9 +87,12 @@ public class SessionService {
             return getSessionsByDateAndLocation(date, location);
         } else
             return getAllSessions();
+
     }
 
+
     public List<Session> saveSessions(List<SessionDTO> sessionDTOS){
+
         List<Session> collect = sessionDTOS.stream().map(sessionDTO -> Session.builder()
                 .description(sessionDTO.getDescription())
                 .endTime(sessionDTO.getEndTime())
@@ -93,7 +102,9 @@ public class SessionService {
                 .track(sessionDTO.getTrack())
                 .event(sessionDTO.getEvent())
                 .type(sessionDTO.getType())
-                .speakers(sessionDTO.getSpeakers())
+                .speakers(sessionDTO.getSpeakersDTO()
+                        .stream().map(speakerDTO-> SpeakerMapper.Instance.speaker(speakerDTO))
+                        .collect(Collectors.toList()))
                 .build()).collect(Collectors.toList());
         return sessionRepository.saveAll(collect);
     }
