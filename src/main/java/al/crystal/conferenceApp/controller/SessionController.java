@@ -31,9 +31,4 @@ public class SessionController {
                                      @RequestParam(required = false) String location) {
         return this.sessionService.getSessions(date, location);
     }
-
-    @GetMapping
-    public List<SessionDTO> getSessions(){
-     return sessionService.getAllSessionDTOs();
-    }
 }
