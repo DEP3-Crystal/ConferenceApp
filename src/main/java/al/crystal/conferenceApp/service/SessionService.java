@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class SessionService {
     public List<Session> getSessionsByDate(String date) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
-        System.out.println("Data formatted1:"+localDate);
+        System.out.println("Data formatted1:" + localDate);
         return sessionRepository.findSessionsByStartTime(localDate);
     }
 
@@ -59,7 +60,7 @@ public class SessionService {
     private List<Session> getSessionsByDateAndLocation(String date, String location) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
-        System.out.println("Data formatted2:"+localDate);
+        System.out.println("Data formatted2:" + localDate);
         return sessionRepository.findAllByStartTimeAndTrackRoomLocation(localDate, location);
     }
 
@@ -70,8 +71,8 @@ public class SessionService {
 
 
     public List<Session> getSessions(String date, String location) {
-        System.out.println("Location passed: "+location);
-        System.out.println("Date passed: "+date);
+        System.out.println("Location passed: " + location);
+        System.out.println("Date passed: " + date);
         if (date != null && location == null) {
             return getSessionsByDate(date);
         } else if (date == null && location != null) {
@@ -82,4 +83,22 @@ public class SessionService {
             return getAllSessions();
     }
 
+    public List<String> getSessionsDates(String location) {
+        if (location != null && !location.equals("")) {
+            System.out.println("Should get here if location is present");
+            return sessionRepository.findDistinctByStartTimeBasedOnLocation(location);
+        } else {
+            System.out.println("Should get here if null empty or  - location ");
+            return sessionRepository.findDistinctByStartTime();
+        }
+    }
+
+    public List<String> getSessionsLocations(String date) {
+        if (date != null && !date.equals("")) {
+            return sessionRepository.findDistinctByLocationBasedOnStartTime(date);
+        }
+        return sessionRepository.findDistinctByTrackRoomLocation();
+    }
+
 }
+

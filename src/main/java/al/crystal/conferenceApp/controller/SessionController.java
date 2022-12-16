@@ -6,6 +6,8 @@ import al.crystal.conferenceApp.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -31,4 +33,16 @@ public class SessionController {
                                      @RequestParam(required = false) String location) {
         return this.sessionService.getSessions(date, location);
     }
+
+    @GetMapping("/dates")
+    public List<String> getSessionsDates(@RequestParam(required = false) String location) {
+        return this.sessionService.getSessionsDates(location);
+    }
+
+    @GetMapping("/locations")
+    public List<String> getLocations(@RequestParam(required = false) String date) {
+        return this.sessionService.getSessionsLocations(date);
+    }
+
+
 }
