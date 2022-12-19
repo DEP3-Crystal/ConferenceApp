@@ -44,7 +44,7 @@ public class UsersService {
             participant.setLastName(user.getLastName());
             participant.setEmail(user.getEmail());
             participant.setPassword(user.getPassword());
-            participant.setParticipantNumber(((Participant) user).getParticipantNumber());
+//            participant.setParticipantNumber(((Participant) user).getParticipantNumber());
             participant.setParticipantSessionList(((Participant) user).getParticipantSessionList());
             participant.setSpeakerRatings(((Participant) user).getSpeakerRatings());
             this.participantRepository.save(participant);
@@ -102,7 +102,7 @@ public class UsersService {
                 existingParticipant.setLastName(user.getLastName());
                 existingParticipant.setEmail(user.getEmail());
                 existingParticipant.setPassword(user.getPassword());
-                existingParticipant.setParticipantNumber(((Participant) user).getParticipantNumber());
+//                existingParticipant.setParticipantNumber(((Participant) user).getParticipantNumber());
                 existingParticipant.setParticipantSessionList(((Participant) user).getParticipantSessionList());
                 existingParticipant.setSpeakerRatings(((Participant) user).getSpeakerRatings());
                 this.participantRepository.save(existingParticipant);

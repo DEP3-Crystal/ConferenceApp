@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping(value = "/events")
 public class EventController {
     @Autowired
-    private EventService eventService;
+    EventService eventService;
 
     @GetMapping(value = "/")
     public List<Event> getAllEvents() {
@@ -24,24 +24,20 @@ public class EventController {
         return this.eventService.getEventById(id);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public List<Event> deleteEvent(@PathVariable Long id) {
         return this.eventService.deleteEvent(id);
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "/update")
     public List<Event> updateEvents(@RequestBody Event event) {
         return this.eventService.updateEvent(event);
     }
 
-    @PostMapping(value = "/")
-    public String createEvent(@RequestBody Event event) {
+    @PostMapping("/add")
+    public Event createEvent(@RequestBody EventDTO eventDTO) {
+            return eventService.saveEvent(eventDTO);
 
-        try {
-            return eventService.saveEvent(event);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 

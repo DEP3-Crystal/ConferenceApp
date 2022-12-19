@@ -1,19 +1,18 @@
 package al.crystal.conferenceApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Data
-@AllArgsConstructor
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class SpeakerRateId implements Serializable {
 
-    private long userId;
-    private long speakerId;
+    private Long userId;
+    private Long speakerId;
 
 }

@@ -13,6 +13,6 @@ import java.io.Serializable;
 @Embeddable
 public class ParticipantSessionId implements Serializable {
 
-    private long userId;
+    private long participantId;
     private long sessionId;
 }

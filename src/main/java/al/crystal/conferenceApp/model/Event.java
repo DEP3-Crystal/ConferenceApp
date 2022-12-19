@@ -2,7 +2,7 @@ package al.crystal.conferenceApp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,25 +17,25 @@ import java.util.List;
 @NoArgsConstructor
 @Entity(name = "events")
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Event {
     @Id
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String title;
-   // @DateTimeFormat(iso = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
     private LocalDate startDay;
-//    @JsonFormat(pattern = "YYYY-MM-dd HH:mm")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
     private LocalDate endDay;
     private String location;
     //Status Open or Restricted
     private boolean participation;
     //New, Ongoing, Ended
+    private int eventStatus;
     private int capacity;
     @JsonBackReference
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private Organiser organiser;
 
@@ -45,7 +45,6 @@ public class Event {
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonIgnore
     private List<Participant> participants;
     private String eventImage;
     private String description;

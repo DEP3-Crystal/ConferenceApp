@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/session")
+@RequestMapping("/sessions")
 public class SessionController {
 
     @Autowired
     private SessionService sessionService;
 
-    @PostMapping("/add")
+    @PostMapping
     public String addSession(@RequestBody SessionDTO session) {
         return sessionService.createSession(session);
     }
@@ -25,13 +25,14 @@ public class SessionController {
         return sessionService.getSession(id);
     }
 
-    @GetMapping
-    public List<Session> getSession() {
-        return this.sessionService.getAllSessions();
-    }
 
-    @GetMapping("/date/{date}")
-    public List<Session> getSessionByDate(@PathVariable String date) {
-        return this.sessionService.getSessionsByDate(date);
+    @GetMapping()
+    public List<Session> getSessions(@RequestParam(required = false) String date,
+                                     @RequestParam(required = false) String location) {
+        return this.sessionService.getSessions(date, location);
+    }
+    @GetMapping("/")
+    public List<SessionDTO> getSessions(){
+        return sessionService.getAllSessionsDTO();
     }
 }

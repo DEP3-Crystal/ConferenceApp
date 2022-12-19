@@ -6,6 +6,9 @@ import al.crystal.conferenceApp.repository.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class TrackService {
 
@@ -23,5 +26,13 @@ public class TrackService {
 
     public Track getTrack(Long id) {
         return trackRepository.getReferenceById(id);
+    }
+
+    public List<Track> saveTracks(List<TrackDTO> trackDTOList) {
+        List<Track> collect = trackDTOList.stream().map(trackDTO -> Track.builder()
+                .trackName(trackDTO.getTrackName())
+                .roomLocation(trackDTO.getRoomLocation())
+                .roomType(trackDTO.getRoomType()).build()).collect(Collectors.toList());
+        return trackRepository.saveAll(collect);
     }
 }
