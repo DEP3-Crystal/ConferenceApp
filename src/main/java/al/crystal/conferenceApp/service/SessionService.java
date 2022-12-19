@@ -89,4 +89,7 @@ public class SessionService {
             return getAllSessions();
     }
 
+    public List<Session> saveSessionList(List<Session> sessionData) {
+       return sessionRepository.saveAll(sessionData);
+    }
 }

@@ -1,5 +1,6 @@
 package al.crystal.conferenceApp.mapper;
 
+
 import al.crystal.conferenceApp.dto.speaker.SpeakerParticipantRateDTO;
 import al.crystal.conferenceApp.model.SpeakerRate;
 import org.mapstruct.Mapper;

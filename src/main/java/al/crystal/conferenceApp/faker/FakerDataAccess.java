@@ -4,13 +4,14 @@ import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.dto.ParticipantDTO;
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.dto.TrackDTO;
-import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
 import al.crystal.conferenceApp.dto.speaker.SpeakerParticipantRateDTO;
 import al.crystal.conferenceApp.mapper.ParticipantMapper;
+import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
 import al.crystal.conferenceApp.mapper.SpeakerParticipantRateMapper;
 import al.crystal.conferenceApp.model.*;
-import al.crystal.conferenceApp.repository.SpeakerRateRepo;
+import al.crystal.conferenceApp.repository.ParticipantSessionRepository;
+import al.crystal.conferenceApp.repository.SpeakerRateRepository;
 import al.crystal.conferenceApp.service.*;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
@@ -44,23 +45,28 @@ public class FakerDataAccess {
     private ParticipantService participantService;
 
     @Autowired
-    private SpeakerRateRepo speakerRateRepo;
+    private SpeakerRateRepository speakerRateRepository;
+
+    @Autowired
+    private ParticipantSessionRepository participantSessionRepository;
 
     FakeValuesService fakeValuesService = new FakeValuesService(
             new Locale("en-GB"), new RandomService());
     Faker faker = Faker.instance();
 
 
-    public List<SessionDTO> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser) {
+    public List<Session> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser,int numberOfParticipants) {
         EventDTO event1 = createEvent(organiser);
-        System.out.println(event1);
         Event event = eventService.saveEvent(event1);
         List<Track> tracks = trackService.saveTracks(trackDTOList(numberOfTracks));
-        List<SpeakerDTO> speakerDTOS = speakerService.saveListOfSpeaker(speakerList(numberOfSpeakers));
-        return sessionList(numberOfSessions, event, tracks, speakerDTOS);
+        List<Speaker> speakers = speakerService.saveAll(speakerList(numberOfSpeakers));
+        List<Session> sessions = sessionList(numberOfSessions, event, tracks, speakers);
+        createSpeakerRate(numberOfParticipants);
+        createParticipantSessions();
+         return sessions;
     }
 
-    public List<SessionDTO> sessionList(int numberOfSession, Event event, List<Track> tracks, List<SpeakerDTO> speakers) {
+    public List<Session> sessionList(int numberOfSession, Event event, List<Track> tracks, List<Speaker> speakers) {
         List<SessionDTO> sessionData = IntStream.range(0, numberOfSession).mapToObj(date -> SessionDTO.builder()
                 .title("title")
                 .capacity(faker.random().nextInt(10, 590))
@@ -70,12 +76,15 @@ public class FakerDataAccess {
                 .description(faker.lorem().characters(50, 80))
                 .type("none")
                 .build()).collect(Collectors.toList());
-        sessionData.forEach(sessionDTO -> {
-            sessionDTO.setTrack(random(tracks));
-            sessionDTO.setSpeakersDTO(randomList(speakers, 0.6f));
+        List<Session> sessions = sessionData.stream().map(sessionDTO -> SessionMapper.Instance.sessionDTOToSession(sessionDTO)).collect(Collectors.toList());
+
+        sessions.forEach(session -> {
+            session.setTrack(random(tracks));
+            session.setSpeakers(randomList(speakers, 0.5f));
         });
-//        sessionService.saveSessions(sessionData);
-        return sessionData;
+
+        return sessionService.saveSessionList(sessions);
+
     }
 
     public EventDTO createEvent(Organiser organiser) {
@@ -132,28 +141,36 @@ public class FakerDataAccess {
                         .build()).collect(Collectors.toList());
     }
 
-    public List<SpeakerParticipantRateDTO> speakerRate(List<ParticipantDTO> participantDTOS) {
+    public List<SpeakerParticipantRateDTO> speakerRate(List<Participant> participants) {
         return speakerService.getAllSpeakers().stream().flatMap(speakerDTO ->
-                participantDTOS.stream().map(participantDTO ->
+                participants.stream().map(participant ->
                         new SpeakerParticipantRateDTO(
-                                ParticipantMapper.Instance.participant(participantDTO),
+                                participant,
                                 SpeakerMapper.Instance.speaker(speakerDTO), faker.random().nextInt(1, 5))
                 )
         ).collect(Collectors.toList());
     }
 
 
-    public List<SpeakerRate> createSpeakerRate(int numberOfParticipant,int numberOfSpeakers){
+    public List<SpeakerRate> createSpeakerRate(int numberOfParticipant){
         List<ParticipantDTO> participant = createParticipant(numberOfParticipant);
-        participantService.participants(participant);
-        List<Speaker> speakers = speakerList(numberOfSpeakers);
-        speakerService.saveListOfSpeaker(speakers);
-        List<SpeakerParticipantRateDTO> speakerParticipantRateDTOS = speakerRate(participant);
+        List<Participant> participants = participantService.saveParticipant(participant);
+        List<SpeakerParticipantRateDTO> speakerParticipantRateDTOS = speakerRate(participants);
         List<SpeakerRate> speakerRateList = speakerParticipantRateDTOS.stream()
                 .map(speakerParticipantRateDTO -> SpeakerParticipantRateMapper.Instance.speakerRate(speakerParticipantRateDTO))
                 .collect(Collectors.toList());
-        return speakerRateRepo.saveAll(speakerRateList);
+        return speakerRateRepository.saveAll(speakerRateList);
 
+    }
+
+    public List<ParticipantSession> createParticipantSessions(){
+
+        List<Participant> participants = participantService.getParticipants();
+        List<Session> allSessions = sessionService.getAllSessions();
+        List<ParticipantSession> participantSessionList = allSessions.stream().flatMap(session -> participants.stream()
+                .map(participant1 -> new ParticipantSession(random(List.of(1, 2, 3, 4, 5)), session, participant1))
+        ).collect(Collectors.toList());
+        return participantSessionRepository.saveAll(participantSessionList);
     }
     public String email() {
         return fakeValuesService.bothify("????##@gmail.com");
