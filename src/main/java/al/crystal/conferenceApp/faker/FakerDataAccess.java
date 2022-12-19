@@ -1,11 +1,14 @@
 package al.crystal.conferenceApp.faker;
 
-import al.crystal.conferenceApp.dto.*;
+import al.crystal.conferenceApp.dto.EventDTO;
+import al.crystal.conferenceApp.dto.ParticipantDTO;
+import al.crystal.conferenceApp.dto.SessionDTO;
+import al.crystal.conferenceApp.dto.TrackDTO;
 import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
-import al.crystal.conferenceApp.dto.speaker.SpeakerSessionRateDTO;
+import al.crystal.conferenceApp.dto.speaker.SpeakerParticipantRateDTO;
 import al.crystal.conferenceApp.mapper.ParticipantMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
-import al.crystal.conferenceApp.mapper.SpeakerSessionRateMapper;
+import al.crystal.conferenceApp.mapper.SpeakerParticipantRateMapper;
 import al.crystal.conferenceApp.model.*;
 import al.crystal.conferenceApp.repository.SpeakerRateRepo;
 import al.crystal.conferenceApp.service.*;
@@ -71,7 +74,7 @@ public class FakerDataAccess {
             sessionDTO.setTrack(random(tracks));
             sessionDTO.setSpeakersDTO(randomList(speakers, 0.6f));
         });
-        sessionService.saveSessions(sessionData);
+//        sessionService.saveSessions(sessionData);
         return sessionData;
     }
 
@@ -129,10 +132,10 @@ public class FakerDataAccess {
                         .build()).collect(Collectors.toList());
     }
 
-    public List<SpeakerSessionRateDTO> speakerRate(List<ParticipantDTO> participantDTOS) {
+    public List<SpeakerParticipantRateDTO> speakerRate(List<ParticipantDTO> participantDTOS) {
         return speakerService.getAllSpeakers().stream().flatMap(speakerDTO ->
                 participantDTOS.stream().map(participantDTO ->
-                        new SpeakerSessionRateDTO(
+                        new SpeakerParticipantRateDTO(
                                 ParticipantMapper.Instance.participant(participantDTO),
                                 SpeakerMapper.Instance.speaker(speakerDTO), faker.random().nextInt(1, 5))
                 )
@@ -145,9 +148,9 @@ public class FakerDataAccess {
         participantService.participants(participant);
         List<Speaker> speakers = speakerList(numberOfSpeakers);
         speakerService.saveListOfSpeaker(speakers);
-        List<SpeakerSessionRateDTO> speakerSessionRateDTOS = speakerRate(participant);
-        List<SpeakerRate> speakerRateList = speakerSessionRateDTOS.stream()
-                .map(SpeakerSessionRateMapper.Instance::speakerRate)
+        List<SpeakerParticipantRateDTO> speakerParticipantRateDTOS = speakerRate(participant);
+        List<SpeakerRate> speakerRateList = speakerParticipantRateDTOS.stream()
+                .map(speakerParticipantRateDTO -> SpeakerParticipantRateMapper.Instance.speakerRate(speakerParticipantRateDTO))
                 .collect(Collectors.toList());
         return speakerRateRepo.saveAll(speakerRateList);
 

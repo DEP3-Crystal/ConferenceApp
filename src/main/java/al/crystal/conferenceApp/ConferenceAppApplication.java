@@ -1,12 +1,6 @@
 package al.crystal.conferenceApp;
 
-import al.crystal.conferenceApp.dto.ParticipantDTO;
-import al.crystal.conferenceApp.dto.speaker.SpeakerSessionRateDTO;
 import al.crystal.conferenceApp.faker.FakerDataAccess;
-import al.crystal.conferenceApp.mapper.SpeakerSessionRateMapper;
-import al.crystal.conferenceApp.model.Organiser;
-import al.crystal.conferenceApp.model.Speaker;
-import al.crystal.conferenceApp.model.SpeakerRate;
 import al.crystal.conferenceApp.repository.SpeakerRateRepo;
 import al.crystal.conferenceApp.service.*;
 import org.slf4j.Logger;
@@ -15,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 //@Configuration
@@ -40,11 +31,10 @@ public class ConferenceAppApplication implements CommandLineRunner {
     Logger logger= LoggerFactory.getLogger(this.getClass().getName());
     @Override
     public void run(String... args) throws Exception {
-        Organiser organizer = organizerService.getOrganizer(1L);
-        logger.info(organizer.toString());
-
-        fakerDataAccess.createSessions(10,6,15,organizer);
-
-        fakerDataAccess.createSpeakerRate(10,10);
+//        Organiser organizer = organizerService.getOrganizer(1L);
+//        logger.info(organizer.toString());
+//        fakerDataAccess.createSessions(10,6,15,organizer);
+//
+//        fakerDataAccess.createSpeakerRate(10,10);
     }
 }

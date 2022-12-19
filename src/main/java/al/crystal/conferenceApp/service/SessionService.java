@@ -1,6 +1,7 @@
 package al.crystal.conferenceApp.service;
 
 import al.crystal.conferenceApp.dto.SessionDTO;
+import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.repository.SessionRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SessionService {
@@ -28,7 +30,7 @@ public class SessionService {
                 .track(sessionDTO.getTrack())
                 .event(sessionDTO.getEvent())
                 .type(sessionDTO.getType())
-                .speakers(sessionDTO.getSpeakers())
+//                .speakers(sessionDTO.getSpeakers())
                 .build();
         sessionRepository.save(newSession);
         return "done";
@@ -68,6 +70,11 @@ public class SessionService {
         return sessionRepository.findAll(Sort.by("startTime"));
     }
 
+    public List<SessionDTO> getAllSessionsDTO() {
+        List<Session> sessionList = sessionRepository.findAll(Sort.by("startTime"));
+        List<SessionDTO> sessionDTOs = sessionList.stream().map(session -> SessionMapper.Instance.sessionToSessionDTO(session)).collect(Collectors.toList());
+        return sessionDTOs;
+    }
 
     public List<Session> getSessions(String date, String location) {
         System.out.println("Location passed: "+location);
