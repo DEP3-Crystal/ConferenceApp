@@ -55,7 +55,9 @@ public class UsersService {
     public List<User> getAll() {
         return this.userRepository.findAll();
     }
-
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
     public List<Participant> getAllParticipants() {
         return this.participantRepository.findAll();
     }
@@ -116,10 +118,6 @@ public class UsersService {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public User getUserById(Long id) {
-        return userRepository.findById(id).get();
     }
 
     public UserDto loginUser(String email, String password) {

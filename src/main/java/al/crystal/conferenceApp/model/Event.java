@@ -1,14 +1,15 @@
 package al.crystal.conferenceApp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -22,16 +23,19 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String title;
-    private Date startDay;
-    private Date endDay;
+   // @DateTimeFormat(iso = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate startDay;
+//    @JsonFormat(pattern = "YYYY-MM-dd HH:mm")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate endDay;
     private String location;
     //Status Open or Restricted
     private boolean participation;
     //New, Ongoing, Ended
-    private int eventStatus;
     private int capacity;
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "user_id")
     private Organiser organiser;
 
@@ -41,6 +45,7 @@ public class Event {
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonIgnore
     private List<Participant> participants;
     private String eventImage;
     private String description;

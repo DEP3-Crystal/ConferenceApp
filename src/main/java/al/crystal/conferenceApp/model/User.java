@@ -18,7 +18,7 @@ import java.io.Serializable;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type"
-        , defaultImpl = Participant.class
+        , defaultImpl = Organiser.class
 )
 @Entity
 
@@ -31,7 +31,7 @@ public abstract class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", unique = true)
     @Id
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
