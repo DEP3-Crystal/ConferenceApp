@@ -55,7 +55,7 @@ public class FakerDataAccess {
     Faker faker = Faker.instance();
 
 
-    public List<Session> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser,int numberOfParticipants) {
+    public List<Session> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser, int numberOfParticipants) {
         EventDTO event1 = createEvent(organiser);
         Event event = eventService.saveEvent(event1);
         List<Track> tracks = trackService.saveTracks(trackDTOList(numberOfTracks));
@@ -63,7 +63,7 @@ public class FakerDataAccess {
         List<Session> sessions = sessionList(numberOfSessions, event, tracks, speakers);
         createSpeakerRate(numberOfParticipants);
         createParticipantSessions();
-         return sessions;
+        return sessions;
     }
 
     public List<Session> sessionList(int numberOfSession, Event event, List<Track> tracks, List<Speaker> speakers) {
@@ -89,10 +89,10 @@ public class FakerDataAccess {
 
     public EventDTO createEvent(Organiser organiser) {
         int capacity = faker.random().nextInt(500);
-        return new EventDTO("title", getPastDay(5),
+        return new EventDTO(1L, "title", getPastDay(5),
                 getPastDay(2),
                 faker.address().fullAddress(),
-                capacity, organiser);
+                capacity, organiser.getId());
     }
 
     private LocalDate getPastDay(int day) {
@@ -152,7 +152,7 @@ public class FakerDataAccess {
     }
 
 
-    public List<SpeakerRate> createSpeakerRate(int numberOfParticipant){
+    public List<SpeakerRate> createSpeakerRate(int numberOfParticipant) {
         List<ParticipantDTO> participant = createParticipant(numberOfParticipant);
         List<Participant> participants = participantService.saveParticipant(participant);
         List<SpeakerParticipantRateDTO> speakerParticipantRateDTOS = speakerRate(participants);
@@ -163,7 +163,7 @@ public class FakerDataAccess {
 
     }
 
-    public List<ParticipantSession> createParticipantSessions(){
+    public List<ParticipantSession> createParticipantSessions() {
 
         List<Participant> participants = participantService.getParticipants();
         List<Session> allSessions = sessionService.getAllSessions();
@@ -172,6 +172,7 @@ public class FakerDataAccess {
         ).collect(Collectors.toList());
         return participantSessionRepository.saveAll(participantSessionList);
     }
+
     public String email() {
         return fakeValuesService.bothify("????##@gmail.com");
     }
