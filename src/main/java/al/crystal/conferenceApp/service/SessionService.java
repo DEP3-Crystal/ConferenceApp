@@ -43,26 +43,36 @@ public class SessionService {
         return "done";
     }
 
-    public Session getSession(Long id) {
+    public Session getOneSession(Long id) {
         return sessionRepository.getReferenceById(id);
     }
 
-    public List<Session> getSessionsByDate(String date) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
-        System.out.println("Data formatted1:"+localDate);
-        return sessionRepository.findSessionsByStartTime(localDate);
+    private List<SessionDTO> getSessionsByDateBasedOnEvent(String date, Long id) {
+        LocalDate localDate = stringToLocalDate(date);
+        List<Session> sessionList = sessionRepository.findSessionsByStartTime(localDate, id);
+        return sessionsToSessionsDTO(sessionList);
     }
 
-    private List<Session> getSessionsByLocation(String location) {
-        return sessionRepository.findAllByTrackRoomLocation(location);
+    private List<SessionDTO> getSessionsByLocationBasedOnEvent(String location, Long id) {
+        List<Session> sessionList = sessionRepository.findAllByTrackRoomLocationAndEventId(location, id);
+        return sessionsToSessionsDTO(sessionList);
     }
 
-    private List<Session> getSessionsByDateAndLocation(String date, String location) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(date, dateTimeFormatter);
-        System.out.println("Data formatted2:"+localDate);
-        return sessionRepository.findAllByStartTimeAndTrackRoomLocation(localDate, location);
+    private List<SessionDTO> getSessionsByEvent(Long id) {
+        List<Session> sessionList = sessionRepository.findAllByEventId(id);
+        return sessionsToSessionsDTO(sessionList);
+    }
+
+    private List<SessionDTO> getSessionsByDateAndLocationBasedOnEvent(String date, String location, Long id) {
+        LocalDate localDate = stringToLocalDate(date);
+        List<Session> sessionList = sessionRepository.findAllByStartTimeAndTrackRoomLocation(localDate, location, id);
+        return sessionsToSessionsDTO(sessionList);
+    }
+
+    private List<SessionDTO> getSessionsByDateAndLocation(String date, String location) {
+        LocalDate localDate = stringToLocalDate(date);
+        List<Session> sessionList = sessionRepository.findAllByDateAndLocation(localDate, location);
+        return sessionsToSessionsDTO(sessionList);
     }
 
 
@@ -72,24 +82,80 @@ public class SessionService {
 
     public List<SessionDTO> getAllSessionsDTO() {
         List<Session> sessionList = sessionRepository.findAll(Sort.by("startTime"));
-        List<SessionDTO> sessionDTOs = sessionList.stream().map(session -> SessionMapper.Instance.sessionToSessionDTO(session)).collect(Collectors.toList());
-        return sessionDTOs;
+        return sessionsToSessionsDTO(sessionList);
     }
 
-    public List<Session> getSessions(String date, String location) {
-        System.out.println("Location passed: "+location);
-        System.out.println("Date passed: "+date);
-        if (date != null && location == null) {
-            return getSessionsByDate(date);
-        } else if (date == null && location != null) {
-            return getSessionsByLocation(location);
-        } else if (date != null && location != null) {
+    public List<SessionDTO> getSessions(String date, String location, Long id) {
+        if (date == null && location == null && id != null) {
+            return getSessionsByEvent(id);
+        } else if (date != null && location == null && id != null) {
+            return getSessionsByDateBasedOnEvent(date, id);
+        } else if (date == null && location != null && id != null) {
+            return getSessionsByLocationBasedOnEvent(location, id);
+        } else if (date != null && location != null && id != null) {
+            return getSessionsByDateAndLocationBasedOnEvent(date, location, id);
+        } else if (date != null && location != null && id == null) {
             return getSessionsByDateAndLocation(date, location);
-        } else
-            return getAllSessions();
+        } else if (date == null && location != null && id == null) {
+            return getSessionsByLocation(location);
+        } else if (date != null && location == null && id == null) {
+            return getSessionsByDate(date);
+        } else {
+            List<Session> sessionList = getAllSessions();
+            return sessionsToSessionsDTO(sessionList);
+        }
     }
+
+    private List<SessionDTO> getSessionsByDate(String date) {
+        LocalDate localDate = stringToLocalDate(date);
+        List<Session> sessionList = sessionRepository.findAllByDate(localDate);
+        return sessionsToSessionsDTO(sessionList);
+    }
+
+    private List<SessionDTO> getSessionsByLocation(String location) {
+        List<Session> sessionList = sessionRepository.findAllByTrackRoomLocation(location);
+        return sessionsToSessionsDTO(sessionList);
+    }
+
 
     public List<Session> saveSessionList(List<Session> sessionData) {
-       return sessionRepository.saveAll(sessionData);
+        return sessionRepository.saveAll(sessionData);
     }
+
+    private List<SessionDTO> sessionsToSessionsDTO(List<Session> sessionList) {
+        return sessionList.stream()
+                .map(session -> SessionMapper.Instance.sessionToSessionDTO(session))
+                .collect(Collectors.toList());
+    }
+
+    private LocalDate stringToLocalDate(String date) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(date, dateTimeFormatter);
+    }
+
+    public List<String> getSessionsDates(String location, Long eventId) {
+        if (location != null && !location.equals("") && eventId == null) {
+            return sessionRepository.findDistinctStartTimeBasedOnLocation(location);
+        } else if (location != null && !location.equals("") && eventId != null) {
+            return sessionRepository.findDistinctStartTimeBasedOnLocationAndEventId(location, eventId);
+        } else if (location == null && eventId != null) {
+            return sessionRepository.findDistinctStartTimeBasedOnEventId(eventId);
+        } else {
+            return sessionRepository.findDistinctStartTime();
+        }
+    }
+
+    public List<String> getSessionsLocations(String date, Long eventId) {
+        if (date != null && !date.equals("") && eventId == null) {
+            return sessionRepository.findDistinctLocationBasedOnStartTime(date);
+        } else if (date != null && !date.equals("") && eventId != null) {
+            return sessionRepository.findDistinctLocationBasedOnStartTimeAndEventId(date, eventId);
+        } else if (date == null && eventId != null) {
+            return sessionRepository.findDistinctLocationBasedOnEventId(eventId);
+        } else {
+            return sessionRepository.findDistinctTrackRoomLocation();
+        }
+    }
+
+
 }

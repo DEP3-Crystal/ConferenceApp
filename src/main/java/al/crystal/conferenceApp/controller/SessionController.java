@@ -22,17 +22,37 @@ public class SessionController {
 
     @GetMapping("/{id}")
     public Session getSession(@PathVariable Long id) {
-        return sessionService.getSession(id);
+        return sessionService.getOneSession(id);
     }
+
+//    @GetMapping("event/{id}")
+//    public  List<SessionDTO> getSessionsByEvent(@PathVariable Long id){
+//        return sessionService.getSessionsByEvent(id);
+//    }
 
 
     @GetMapping()
-    public List<Session> getSessions(@RequestParam(required = false) String date,
-                                     @RequestParam(required = false) String location) {
-        return this.sessionService.getSessions(date, location);
+    public List<SessionDTO> getSessions(@RequestParam(required = false) String date,
+                                        @RequestParam(required = false) String location,
+                                        @RequestParam(required = false) Long eventId) {
+        return this.sessionService.getSessions(date, location, eventId);
     }
+
     @GetMapping("/")
-    public List<SessionDTO> getSessions(){
+    public List<SessionDTO> getSessions() {
         return sessionService.getAllSessionsDTO();
+    }
+
+
+    @GetMapping("/dates")
+    public List<String> getSessionsDates(@RequestParam(required = false) String location,
+                                         @RequestParam(required = false) Long eventId) {
+        return this.sessionService.getSessionsDates(location,eventId);
+    }
+
+    @GetMapping("/locations")
+    public List<String> getLocations(@RequestParam(required = false) String date,
+                                     @RequestParam(required = false) Long eventId) {
+        return this.sessionService.getSessionsLocations(date,eventId);
     }
 }
