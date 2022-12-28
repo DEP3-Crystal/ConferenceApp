@@ -118,15 +118,26 @@ public class UsersService {
         }
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id).get();
-    }
-
     public UserDto loginUser(String email, String password) {
-        User byEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
-        if (byEmailAndPassword != null)
-            return UserMapper.toDto(byEmailAndPassword);
-        else
+        User userEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
+        String type = userRepository.findDTypeOfLoggedUser(email);
+
+        if (userEmailAndPassword != null) {
+            UserDto userDto = UserMapper.toDto(userEmailAndPassword);
+            userDto.setType(type);
+            if (type.equals("O")) {
+
+                Organiser organiser = organiserRepository.findOrganiserBy(userEmailAndPassword.getId());
+
+                userDto.setBiography(organiser.getBiography());
+                userDto.setCompanyName(organiser.getCompanyName());
+                userDto.setFacebookUrl(organiser.getFacebookUrl());
+                userDto.setTweeterUrl(organiser.getTweeterUrl());
+                userDto.setInstagramUrl(organiser.getInstagramUrl());
+                userDto.setLinkedinUrl(organiser.getLinkedinUrl());
+            }
+            return userDto;
+        } else
             return null;
     }
 
