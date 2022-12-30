@@ -47,12 +47,14 @@ public class SessionController {
     @GetMapping("/dates")
     public List<String> getSessionsDates(@RequestParam(required = false) String location,
                                          @RequestParam(required = false) Long eventId) {
-        return this.sessionService.getSessionsDates(location,eventId);
+        List<String> ls = this.sessionService.getSessionsDates(location,eventId);
+        return ls;
     }
 
     @GetMapping("/locations")
     public List<String> getLocations(@RequestParam(required = false) String date,
                                      @RequestParam(required = false) Long eventId) {
-        return this.sessionService.getSessionsLocations(date,eventId);
+        List<String> ls= this.sessionService.getSessionsLocations(date,eventId);
+        return ls;
     }
 }

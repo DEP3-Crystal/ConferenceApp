@@ -4,10 +4,7 @@ import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
 import al.crystal.conferenceApp.model.Event;
 import al.crystal.conferenceApp.model.Track;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;

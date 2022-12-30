@@ -1,9 +1,7 @@
 package al.crystal.conferenceApp.dto.speaker;
 
 import al.crystal.conferenceApp.model.SpeakerRate;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 @Data

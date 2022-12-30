@@ -16,6 +16,7 @@ public class SpeakerService {
 
     @Autowired
     private SpeakerRepository speakerRepository;
+
     @Autowired
     private SpeakerRateRepository speakerRateRepository;
 
@@ -37,4 +38,10 @@ public class SpeakerService {
     }
 
 
+    public List<SpeakerDTO> getAllSpeakersByEvent(Long eventId) {
+        List<Speaker> speakers = speakerRepository.findAllByEventId(eventId);
+        return speakers.stream()
+                .map(speaker -> SpeakerMapper.Instance.speakerDto(speaker))
+                .collect(Collectors.toList());
+    }
 }

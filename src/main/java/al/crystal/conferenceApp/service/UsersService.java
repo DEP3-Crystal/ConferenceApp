@@ -23,9 +23,11 @@ public class UsersService {
     private ParticipantRepository participantRepository;
 
     public String saveUser(User user) {
-
+        Organiser organiser = new Organiser();
+        Participant participant = new Participant();
         if (user instanceof Organiser) {
-            Organiser organiser = new Organiser();
+            System.out.println("Yes its an instace of Organizer");
+
             organiser.setFirstName(user.getFirstName());
             organiser.setLastName(user.getLastName());
             organiser.setEmail(user.getEmail());
@@ -38,8 +40,8 @@ public class UsersService {
             organiser.setInstagramUrl(((Organiser) user).getInstagramUrl());
             this.organiserRepository.save(organiser);
         } else if (user instanceof Participant) {
+            System.out.println("Yes its an instace of Participant");
 
-            Participant participant = new Participant();
             participant.setFirstName(user.getFirstName());
             participant.setLastName(user.getLastName());
             participant.setEmail(user.getEmail());

@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -56,10 +57,11 @@ public class FakerDataAccess {
 
 
     public List<Session> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser, int numberOfParticipants) {
+
         EventDTO event1 = createEvent(organiser);
         Event event = eventService.saveEvent(event1);
         List<Track> tracks = trackService.saveTracks(trackDTOList(numberOfTracks));
-        List<Speaker> speakers = speakerService.saveAll(speakerList(numberOfSpeakers));
+        List<Speaker> speakers = speakerService.saveAll(speakerList(numberOfSpeakers, event));
         List<Session> sessions = sessionList(numberOfSessions, event, tracks, speakers);
         createSpeakerRate(numberOfParticipants);
         createParticipantSessions();
@@ -92,7 +94,7 @@ public class FakerDataAccess {
         return new EventDTO(1L, "title", getPastDay(5),
                 getPastDay(2),
                 faker.address().fullAddress(),
-                capacity, organiser.getId());
+                capacity, organiser.getId(),new ArrayList<>());
     }
 
     private LocalDate getPastDay(int day) {
@@ -112,13 +114,14 @@ public class FakerDataAccess {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(faker.date().future(day, TimeUnit.DAYS).getTime()), ZoneId.systemDefault());
     }
 
-    public List<Speaker> speakerList(int numberOfSpeakers) {
+    public List<Speaker> speakerList(int numberOfSpeakers, Event event) {
         return IntStream.range(0, numberOfSpeakers).mapToObj(data -> Speaker.builder()
                 .name(faker.name().firstName())
                 .lastName(faker.name().lastName())
-                .biography(faker.lorem().characters(20, 50))
+                .biography(faker.lorem().characters(100,200))
                 .companyName(faker.company().name())
-                .title("none")
+                .title(faker.book().title())
+                .events(event)
                 .build()).collect(Collectors.toList());
     }
 

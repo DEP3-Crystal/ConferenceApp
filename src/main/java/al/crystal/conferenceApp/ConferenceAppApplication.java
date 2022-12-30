@@ -36,7 +36,6 @@ public class ConferenceAppApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 //        Organiser organizer = organizerService.getOrganizer(1L);
 //        logger.info(organizer.toString());
-//        fakerDataAccess.createSessions(5,3,15,organizer,50);
-
+//        fakerDataAccess.createSessions(5,3,5,organizer,30);
     }
 }
