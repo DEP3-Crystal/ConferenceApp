@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SpeakerDTO {
     private long id;
-    private String name;
+    private String firstName;
     private String lastName;
     private String companyName;
     private String biography;

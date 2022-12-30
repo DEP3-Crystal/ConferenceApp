@@ -43,18 +43,9 @@ public class EventService {
         return this.eventRepository.findAll();
     }
 
-    public List<Event> updateEvent(Event event) {
-        Event existingEvent = this.eventRepository.findById(event.getId()).orElse(null);
-        if (existingEvent != null) {
-            existingEvent.setTitle(event.getTitle());
-            existingEvent.setStartDay(event.getStartDay());
-            existingEvent.setEndDay(event.getEndDay());
-            existingEvent.setLocation(event.getLocation());
-            existingEvent.setEventStatus(event.getEventStatus());
-            existingEvent.setCapacity(event.getCapacity());
-            existingEvent.setOrganiser(event.getOrganiser());
-            this.eventRepository.save(existingEvent);
-        }
-        return this.getAllEvents();
+    public Event updateEvent(Event event) {
+        Event existingEvent = this.eventRepository.findById(event.getId()).get();
+
+        return this.eventRepository.save(event);
     }
 }

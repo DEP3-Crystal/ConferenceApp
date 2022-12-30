@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SpeakerRateDTO {
     private long id;
-    private String name;
+    private String firstName;
     private String lastName;
     private String companyName;
     private String biography;

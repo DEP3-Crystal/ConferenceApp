@@ -28,6 +28,10 @@ public class Session {
     private LocalDateTime startTime;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endTime;
+    private double sessionRate;
+    private int sessionRateSum;
+    private int sessionRateCount;
+
 
     @ManyToOne
     @JoinColumn(name = "track_id", nullable = false)

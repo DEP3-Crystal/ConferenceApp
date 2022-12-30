@@ -5,7 +5,6 @@ import al.crystal.conferenceApp.dto.ParticipantDTO;
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.dto.TrackDTO;
 import al.crystal.conferenceApp.dto.speaker.SpeakerParticipantRateDTO;
-import al.crystal.conferenceApp.mapper.ParticipantMapper;
 import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
 import al.crystal.conferenceApp.mapper.SpeakerParticipantRateMapper;
@@ -63,6 +62,8 @@ public class FakerDataAccess {
         List<Session> sessions = sessionList(numberOfSessions, event, tracks, speakers);
         createSpeakerRate(numberOfParticipants);
         createParticipantSessions();
+        List<Participant> participants = participantService.getParticipants();
+        eventParticipantRelationship(event,participants);
          return sessions;
     }
 
@@ -114,7 +115,7 @@ public class FakerDataAccess {
 
     public List<Speaker> speakerList(int numberOfSpeakers) {
         return IntStream.range(0, numberOfSpeakers).mapToObj(data -> Speaker.builder()
-                .name(faker.name().firstName())
+                .firstName(faker.name().firstName())
                 .lastName(faker.name().lastName())
                 .biography(faker.lorem().characters(20, 50))
                 .companyName(faker.company().name())
@@ -136,7 +137,7 @@ public class FakerDataAccess {
                 .mapToObj(i -> ParticipantDTO.builder()
                         .firstName(faker.name().firstName())
                         .lastName(faker.name().lastName())
-                        .email(email())
+                        .email(faker.internet().emailAddress())
                         .password(faker.funnyName().name())
                         .build()).collect(Collectors.toList());
     }
@@ -170,7 +171,11 @@ public class FakerDataAccess {
         List<ParticipantSession> participantSessionList = allSessions.stream().flatMap(session -> participants.stream()
                 .map(participant1 -> new ParticipantSession(random(List.of(1, 2, 3, 4, 5)), session, participant1))
         ).collect(Collectors.toList());
-        return participantSessionRepository.saveAll(participantSessionList);
+         return participantSessionRepository.saveAll(participantSessionList);
+    }
+    public void eventParticipantRelationship(Event event,List<Participant> participants){
+        event.setParticipants(participants);
+         eventService.updateEvent(event);
     }
     public String email() {
         return fakeValuesService.bothify("????##@gmail.com");

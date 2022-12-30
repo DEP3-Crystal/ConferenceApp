@@ -22,6 +22,7 @@ public class Event {
     @Id
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
     private long id;
     private String title;
     @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)

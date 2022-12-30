@@ -27,10 +27,11 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "users")
 public abstract class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", unique = true)
+    @Column(name = "user_id", unique = true)
     private long id;
     private String firstName;
     private String lastName;

@@ -20,8 +20,11 @@ import java.util.List;
 public class Track implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "track_id")
     private long id;
+
     private String trackName;
+    @Column(name = "room_location")
     private String roomLocation;
     private String roomType;
 

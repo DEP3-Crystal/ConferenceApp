@@ -30,7 +30,7 @@ public class EventController {
     }
 
     @PutMapping(value = "/update")
-    public List<Event> updateEvents(@RequestBody Event event) {
+    public Event updateEvents(@RequestBody Event event) {
         return this.eventService.updateEvent(event);
     }
 
