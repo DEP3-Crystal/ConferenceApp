@@ -52,5 +52,12 @@ public class Speaker {
         this.instagramUrl = instagramUrl;
     }
 
+    @PreRemove
+    private void removeSessionsFromSpeakers(){
+        for(Session s : sessions){
+            s.getSpeakers().remove(this);
+        }
+    }
+
 
 }

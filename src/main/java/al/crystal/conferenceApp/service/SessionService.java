@@ -1,6 +1,5 @@
 package al.crystal.conferenceApp.service;
 
-import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
@@ -9,6 +8,7 @@ import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.model.Track;
 import al.crystal.conferenceApp.repository.EventRepository;
+import al.crystal.conferenceApp.repository.ParticipantSessionRepository;
 import al.crystal.conferenceApp.repository.SessionRepository;
 import al.crystal.conferenceApp.repository.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +31,12 @@ public class SessionService {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private ParticipantSessionRepository participantSessionRepository;
+
+
+
 
 
     public Session createSession(SessionDTO sessionDTO) {
@@ -177,4 +182,9 @@ public class SessionService {
     }
 
 
+    public void deleteSession(Long id) {
+
+        participantSessionRepository.deleteBySessionId(id);
+        sessionRepository.deleteById(id);
+    }
 }

@@ -4,6 +4,7 @@ import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,5 +57,10 @@ public class SessionController {
                                      @RequestParam(required = false) Long eventId) {
         List<String> ls = this.sessionService.getSessionsLocations(date, eventId);
         return ls;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteSession(@PathVariable Long id){
+        this.sessionService.deleteSession(id);
     }
 }
