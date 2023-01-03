@@ -5,7 +5,6 @@ import al.crystal.conferenceApp.dto.ParticipantDTO;
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.dto.TrackDTO;
 import al.crystal.conferenceApp.dto.speaker.SpeakerParticipantRateDTO;
-import al.crystal.conferenceApp.mapper.ParticipantMapper;
 import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
 import al.crystal.conferenceApp.mapper.SpeakerParticipantRateMapper;
@@ -94,7 +93,7 @@ public class FakerDataAccess {
         return new EventDTO(1L, "title", getPastDay(5),
                 getPastDay(2),
                 faker.address().fullAddress(),
-                capacity, organiser.getId(),new ArrayList<>());
+                capacity, organiser.getId(), new ArrayList<>());
     }
 
     private LocalDate getPastDay(int day) {
@@ -104,11 +103,10 @@ public class FakerDataAccess {
 
     public List<TrackDTO> trackDTOList(int numberOfTrack) {
         return IntStream.range(0, numberOfTrack)
-                .mapToObj(data -> new TrackDTO(faker.funnyName().name(),
+                .mapToObj(data -> new TrackDTO(null,faker.funnyName().name(),
                         faker.address().streetName(), "none"))
                 .collect(Collectors.toList());
     }
-
 
     private LocalDateTime getFutureDay(int day) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(faker.date().future(day, TimeUnit.DAYS).getTime()), ZoneId.systemDefault());
@@ -118,7 +116,7 @@ public class FakerDataAccess {
         return IntStream.range(0, numberOfSpeakers).mapToObj(data -> Speaker.builder()
                 .name(faker.name().firstName())
                 .lastName(faker.name().lastName())
-                .biography(faker.lorem().characters(100,200))
+                .biography(faker.lorem().characters(100, 200))
                 .companyName(faker.company().name())
                 .title(faker.book().title())
                 .events(event)

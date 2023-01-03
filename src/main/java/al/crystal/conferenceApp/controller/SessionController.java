@@ -16,12 +16,12 @@ public class SessionController {
     private SessionService sessionService;
 
     @PostMapping
-    public String addSession(@RequestBody SessionDTO session) {
+    public Session addSession(@RequestBody SessionDTO session) {
         return sessionService.createSession(session);
     }
 
     @GetMapping("/{id}")
-    public Session getSession(@PathVariable Long id) {
+    public SessionDTO getSession(@PathVariable Long id) {
         return sessionService.getOneSession(id);
     }
 
@@ -47,14 +47,14 @@ public class SessionController {
     @GetMapping("/dates")
     public List<String> getSessionsDates(@RequestParam(required = false) String location,
                                          @RequestParam(required = false) Long eventId) {
-        List<String> ls = this.sessionService.getSessionsDates(location,eventId);
+        List<String> ls = this.sessionService.getSessionsDates(location, eventId);
         return ls;
     }
 
     @GetMapping("/locations")
     public List<String> getLocations(@RequestParam(required = false) String date,
                                      @RequestParam(required = false) Long eventId) {
-        List<String> ls= this.sessionService.getSessionsLocations(date,eventId);
+        List<String> ls = this.sessionService.getSessionsLocations(date, eventId);
         return ls;
     }
 }

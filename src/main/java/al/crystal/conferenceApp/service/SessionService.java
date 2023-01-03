@@ -1,10 +1,16 @@
 package al.crystal.conferenceApp.service;
 
+import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.mapper.SessionMapper;
+import al.crystal.conferenceApp.mapper.SpeakerMapper;
+import al.crystal.conferenceApp.model.Event;
 import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.model.Speaker;
+import al.crystal.conferenceApp.model.Track;
+import al.crystal.conferenceApp.repository.EventRepository;
 import al.crystal.conferenceApp.repository.SessionRepository;
+import al.crystal.conferenceApp.repository.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -12,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,20 +27,31 @@ public class SessionService {
     @Autowired
     private SessionRepository sessionRepository;
 
-    public String createSession(SessionDTO sessionDTO) {
+    @Autowired
+    private TrackRepository trackRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
+
+
+    public Session createSession(SessionDTO sessionDTO) {
+        long selectedTrackId = sessionDTO.getTrack().getId();
+        Track selectedTrack = trackRepository.findById(selectedTrackId).get();
+
+        long selectedEventId = sessionDTO.getEvent().getId();
+        Event selectedEvent = eventRepository.findById(selectedEventId).get();
         Session newSession = Session.builder()
                 .description(sessionDTO.getDescription())
                 .endTime(sessionDTO.getEndTime())
                 .startTime(sessionDTO.getStartTime())
                 .title(sessionDTO.getTitle())
                 .capacity(sessionDTO.getCapacity())
-                .track(sessionDTO.getTrack())
-                .event(sessionDTO.getEvent())
+                .track(selectedTrack)
+                .event(selectedEvent)
                 .type(sessionDTO.getType())
-//                .speakers(sessionDTO.getSpeakers())
+                .speakers(sessionDTO.getSpeakersDTO().stream().map(speaker -> SpeakerMapper.Instance.speaker(speaker)).collect(Collectors.toList()))
                 .build();
-        sessionRepository.save(newSession);
-        return "done";
+        return sessionRepository.save(newSession);
     }
 
     public String addSpeakers(Long sessionId, List<Speaker> speakers) {
@@ -43,8 +61,9 @@ public class SessionService {
         return "done";
     }
 
-    public Session getOneSession(Long id) {
-        return sessionRepository.getReferenceById(id);
+    public SessionDTO getOneSession(Long id) {
+        Session session = sessionRepository.getReferenceById(id);
+        return SessionMapper.Instance.sessionToSessionDTO(session);
     }
 
     private List<SessionDTO> getSessionsByDateBasedOnEvent(String date, Long id) {
