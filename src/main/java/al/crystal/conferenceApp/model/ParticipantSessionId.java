@@ -1,8 +1,6 @@
 package al.crystal.conferenceApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -13,6 +11,6 @@ import java.io.Serializable;
 @Embeddable
 public class ParticipantSessionId implements Serializable {
 
-    private long userId;
+    private long participantId;
     private long sessionId;
 }

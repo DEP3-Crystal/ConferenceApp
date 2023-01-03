@@ -9,9 +9,7 @@ import al.crystal.conferenceApp.model.User;
 import al.crystal.conferenceApp.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,11 +33,6 @@ public class UserController {
     @GetMapping(value = "/users")
     public List<User> getAllUsers() {
         return userServices.getAll();
-    }
-
-    @GetMapping("/users/{id}")
-    public User findUserById(@PathVariable Long id) {
-        return userServices.getUserById(id);
     }
 
     @GetMapping("/users/participants")

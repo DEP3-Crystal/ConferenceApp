@@ -1,14 +1,14 @@
 package al.crystal.conferenceApp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -16,14 +16,17 @@ import java.util.List;
 @NoArgsConstructor
 @Entity(name = "events")
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Event {
     @Id
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String title;
-    private Date startDay;
-    private Date endDay;
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    private LocalDate startDay;
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    private LocalDate endDay;
     private String location;
     //Status Open or Restricted
     private boolean participation;
@@ -35,7 +38,6 @@ public class Event {
     @JoinColumn(name = "user_id")
     private Organiser organiser;
 
-
     @ManyToMany
     @JoinTable(name = "participant_event",
             joinColumns = @JoinColumn(name = "event_id"),
@@ -44,5 +46,9 @@ public class Event {
     private List<Participant> participants;
     private String eventImage;
     private String description;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "events")
+    private List<Speaker> speakers;
 
 }

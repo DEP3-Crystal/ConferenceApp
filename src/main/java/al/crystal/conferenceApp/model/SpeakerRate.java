@@ -1,19 +1,19 @@
 package al.crystal.conferenceApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class SpeakerRate {
 
     @EmbeddedId
-    private SpeakerRateId id;
+    private SpeakerRateId id=new SpeakerRateId();
 
     @ManyToOne
     @MapsId("userId")
@@ -26,4 +26,5 @@ public class SpeakerRate {
     private Speaker speaker;
 
     private int rating;
+
 }

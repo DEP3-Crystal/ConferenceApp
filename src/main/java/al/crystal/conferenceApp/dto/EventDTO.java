@@ -1,23 +1,31 @@
 package al.crystal.conferenceApp.dto;
 
+import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
 import al.crystal.conferenceApp.model.Organiser;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import al.crystal.conferenceApp.model.Speaker;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class EventDTO {
 
+
+    private  Long id;
     private String title;
-    private Date startDay;
-    private Date endDay;
+    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
+    private LocalDate startDay;
+    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
+    private LocalDate endDay;
     private String location;
     private int capacity;
-    private Organiser organiser;
+    private Long organiserId;
+    private List<SpeakerDTO> speakerDTOS;
 
 
 }

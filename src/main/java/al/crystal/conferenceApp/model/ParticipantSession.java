@@ -1,8 +1,6 @@
 package al.crystal.conferenceApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,10 +11,7 @@ import javax.persistence.*;
 public class ParticipantSession {
 
     @EmbeddedId
-    private ParticipantSessionId id;
-    private String zone;
-    private int chairNumber;
-    private double price;
+    private ParticipantSessionId id=new ParticipantSessionId();
     private int rating;
 
     @ManyToOne
@@ -25,7 +20,13 @@ public class ParticipantSession {
     private Session session;
 
     @ManyToOne
-    @MapsId("userId")
+    @MapsId("participantId")
     @JoinColumn(name = "user_id")
-    private User participantSession;
+    private Participant participant;
+
+    public ParticipantSession(int rating, Session session, Participant participant) {
+        this.rating = rating;
+        this.session = session;
+        this.participant = participant;
+    }
 }

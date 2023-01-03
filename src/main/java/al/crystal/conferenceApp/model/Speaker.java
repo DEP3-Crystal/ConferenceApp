@@ -1,17 +1,19 @@
 package al.crystal.conferenceApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "speaker")
+@Builder
+@ToString
 public class Speaker {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,14 +27,30 @@ public class Speaker {
     private String tweeterUrl;
     private String facebookUrl;
     private String instagramUrl;
-    @ManyToMany
-    @JoinTable(name = "session_speaker",
-            joinColumns = @JoinColumn(name = "speaker_id"),
-            inverseJoinColumns = @JoinColumn(name = "session_id")
-    )
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "speakers")
     private Set<Session> sessions;
 
-    @OneToMany(mappedBy = "speaker")
+    @OneToMany(mappedBy = "speaker", fetch = FetchType.EAGER)
     private List<SpeakerRate> ratings;
+
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event events;
+
+    public Speaker(String name, String lastName, String companyName, String biography, String title, String linkedinUrl, String tweeterUrl, String facebookUrl, String instagramUrl) {
+        this.name = name;
+        this.lastName = lastName;
+        this.companyName = companyName;
+        this.biography = biography;
+        this.title = title;
+        this.linkedinUrl = linkedinUrl;
+        this.tweeterUrl = tweeterUrl;
+        this.facebookUrl = facebookUrl;
+        this.instagramUrl = instagramUrl;
+    }
+
 
 }
