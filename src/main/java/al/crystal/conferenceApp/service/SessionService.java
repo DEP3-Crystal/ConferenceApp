@@ -3,14 +3,8 @@ package al.crystal.conferenceApp.service;
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
-import al.crystal.conferenceApp.model.Event;
-import al.crystal.conferenceApp.model.Session;
-import al.crystal.conferenceApp.model.Speaker;
-import al.crystal.conferenceApp.model.Track;
-import al.crystal.conferenceApp.repository.EventRepository;
-import al.crystal.conferenceApp.repository.ParticipantSessionRepository;
-import al.crystal.conferenceApp.repository.SessionRepository;
-import al.crystal.conferenceApp.repository.TrackRepository;
+import al.crystal.conferenceApp.model.*;
+import al.crystal.conferenceApp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,8 +30,8 @@ public class SessionService {
     @Autowired
     private ParticipantSessionRepository participantSessionRepository;
 
-
-
+    @Autowired
+    UserRepository userRepository;
 
 
     public Session createSession(SessionDTO sessionDTO) {
@@ -186,5 +181,47 @@ public class SessionService {
 
         participantSessionRepository.deleteBySessionId(id);
         sessionRepository.deleteById(id);
+    }
+
+    public SessionDTO updateSession(SessionDTO sessionDTO) {
+        Session sessionOnDB = this.sessionRepository.findById(sessionDTO.getId()).get();
+
+        sessionOnDB.setTitle(sessionDTO.getTitle());
+        sessionOnDB.setDescription(sessionDTO.getDescription());
+        sessionOnDB.setType(sessionDTO.getType());
+        sessionOnDB.setCapacity(sessionDTO.getCapacity());
+        sessionOnDB.setStartTime(sessionDTO.getStartTime());
+        sessionOnDB.setEndTime(sessionDTO.getEndTime());
+        sessionOnDB.setTrack(sessionDTO.getTrack());
+        sessionOnDB.setSpeakers(sessionDTO.getSpeakersDTO().stream().map(speakerDTO -> SpeakerMapper.Instance.speaker(speakerDTO)).collect(Collectors.toList()));
+
+        Session session = this.sessionRepository.saveAndFlush(sessionOnDB);
+        return SessionMapper.Instance.sessionToSessionDTO(session);
+
+    }
+
+    public boolean rateSession(String email, Long sessionId, int rate) {
+        User user = this.userRepository.findByEmail(email);
+        int updatedRows = this.participantSessionRepository.updateRating(rate, user.getId(), sessionId);
+//        ParticipantSessionId s = new ParticipantSessionId(user.getId(), sessionId);
+//        Optional<ParticipantSession> byId = this.participantSessionRepository.findById(s);
+//        if(byId.isPresent()){
+//            System.out.println("found");
+//        }
+        //From ParticipantSession to Object solved the issue
+//        Object sessionParticipated = this.participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
+//        if (sessionParticipated != null) {
+//            if (sessionParticipated.getRating() != null) {
+//                return false;
+//            } else {
+//                sessionParticipated.setRating(rate);
+//                this.participantSessionRepository.saveAndFlush(sessionParticipated);
+//                return true;
+//            }
+//        }
+
+        if(updatedRows>0)
+            return true;
+        return false;
     }
 }
