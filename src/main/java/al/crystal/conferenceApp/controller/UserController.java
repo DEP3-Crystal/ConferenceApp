@@ -40,6 +40,11 @@ public class UserController {
         return userServices.getUserById(id);
     }
 
+    @GetMapping(value = "users/{email}")
+    public User findUserByEmail(@PathVariable String email) {
+        return userServices.getUserByEmail(email);
+    }
+
     @GetMapping(value = "participants")
     public List<Participant> getAllParticipants() {
         return this.userServices.getAllParticipants();

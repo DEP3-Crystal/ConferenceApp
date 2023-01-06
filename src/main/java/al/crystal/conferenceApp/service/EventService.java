@@ -6,18 +6,25 @@ import al.crystal.conferenceApp.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class EventService {
     @Autowired
-    private EventRepository eventRepository;
+    EventRepository eventRepository;
+    public String saveEvent(EventDTO event) throws Exception {
 
-    public Event saveEvent(EventDTO event)  {
+        LocalDate today =  LocalDate.now();
+        if(today.isAfter(event.getStartDay())){
+            throw new Exception("The day to start is a past Day!");
+        }else if(event.getStartDay().isAfter(event.getEndDay())){
+            throw new Exception("The day to start is a after the day to end!");}
 
-//        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
-//            throw new Exception("not done");
-//        }
+        if(!(eventRepository.findEvents(event.getStartDay(),event.getEndDay()).isEmpty())){
+            throw new Exception
+                    ("Between this Start Date and End Date there is another event!");
+        }
         Event newEvent = Event.builder()
                 .title(event.getTitle())
                 .startDay(event.getStartDay())
@@ -25,9 +32,13 @@ public class EventService {
                 .location(event.getLocation())
                 .capacity(event.getCapacity())
                 .organiser(event.getOrganiser())
+                .eventImage(event.getEventImage())
+                .description(event.getDescription())
                 .build();
 
-        return this.eventRepository.save(newEvent);
+
+        this.eventRepository.save(newEvent);
+        return "Saved";
     }
 
     public List<Event> getAllEvents() {
@@ -50,8 +61,9 @@ public class EventService {
             existingEvent.setStartDay(event.getStartDay());
             existingEvent.setEndDay(event.getEndDay());
             existingEvent.setLocation(event.getLocation());
-            existingEvent.setEventStatus(event.getEventStatus());
             existingEvent.setCapacity(event.getCapacity());
+            existingEvent.setEventImage(event.getEventImage());
+            existingEvent.setDescription(event.getDescription());
             existingEvent.setOrganiser(event.getOrganiser());
             this.eventRepository.save(existingEvent);
         }

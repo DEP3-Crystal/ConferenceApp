@@ -24,9 +24,9 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private String title;
-    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
+    @JsonFormat(pattern="yyyy-MM-dd")//, shape=JsonFormat.Shape.STRING)
     private LocalDate startDay;
-    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
+    @JsonFormat(pattern="yyyy-MM-dd")//, shape=JsonFormat.Shape.STRING)
     private LocalDate endDay;
     private String location;
     //Status Open or Restricted
