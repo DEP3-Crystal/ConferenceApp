@@ -35,6 +35,11 @@ public class Speaker {
     @OneToMany(mappedBy = "speaker", fetch = FetchType.EAGER)
     private List<SpeakerRate> ratings;
 
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event events;
+
     public Speaker(String name, String lastName, String companyName, String biography, String title, String linkedinUrl, String tweeterUrl, String facebookUrl, String instagramUrl) {
         this.name = name;
         this.lastName = lastName;

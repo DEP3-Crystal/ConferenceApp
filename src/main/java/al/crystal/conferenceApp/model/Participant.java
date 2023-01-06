@@ -18,7 +18,7 @@ public class Participant extends User {
     @OneToMany(mappedBy = "participant")
     private List<SpeakerRate> speakerRatings;
 
-    @OneToMany(mappedBy = "participantSession")
+    @OneToMany(mappedBy = "participant")
     private List<ParticipantSession> participantSessionList;
 
 }

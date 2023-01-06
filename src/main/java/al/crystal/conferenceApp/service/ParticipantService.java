@@ -16,10 +16,14 @@ public class ParticipantService {
     @Autowired
     private ParticipantRepository participantRepository;
 
-    public List<Participant> participants(List<ParticipantDTO> participantDTOS) {
+    public List<Participant> saveParticipant(List<ParticipantDTO> participantDTOS) {
         List<Participant> collect = participantDTOS.stream().map(ParticipantMapper.Instance::participant)
                 .collect(Collectors.toList());
 
         return participantRepository.saveAll(collect);
+    }
+
+    public List<Participant> getParticipants() {
+        return participantRepository.findAll();
     }
 }

@@ -1,5 +1,6 @@
 package al.crystal.conferenceApp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;

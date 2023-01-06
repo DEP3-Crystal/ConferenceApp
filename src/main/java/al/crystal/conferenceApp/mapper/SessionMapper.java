@@ -12,4 +12,6 @@ public interface SessionMapper {
 
     @Mapping(source ="speakers",target = "speakersDTO")
      SessionDTO sessionToSessionDTO(Session session);
+
+    Session sessionDTOToSession(SessionDTO sessionDTO);
 }

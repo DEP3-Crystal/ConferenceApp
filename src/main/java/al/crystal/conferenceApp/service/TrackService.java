@@ -1,6 +1,9 @@
 package al.crystal.conferenceApp.service;
 
 import al.crystal.conferenceApp.dto.TrackDTO;
+import al.crystal.conferenceApp.mapper.SessionMapper;
+import al.crystal.conferenceApp.mapper.TrackMapper;
+import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.model.Track;
 import al.crystal.conferenceApp.repository.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +18,13 @@ public class TrackService {
     @Autowired
     private TrackRepository trackRepository;
 
-    public String createTrack(TrackDTO trackDTO) {
+    public Track createTrack(TrackDTO trackDTO) {
         Track newTrack = Track.builder()
                 .trackName(trackDTO.getTrackName())
                 .roomLocation(trackDTO.getRoomLocation())
                 .roomType(trackDTO.getRoomType()).build();
-        trackRepository.save(newTrack);
-        return "done";
+       return  trackRepository.save(newTrack);
+
     }
 
     public Track getTrack(Long id) {
@@ -34,5 +37,16 @@ public class TrackService {
                 .roomLocation(trackDTO.getRoomLocation())
                 .roomType(trackDTO.getRoomType()).build()).collect(Collectors.toList());
         return trackRepository.saveAll(collect);
+    }
+
+    public List<TrackDTO> getTracksList() {
+        List<Track> trackList = trackRepository.findAll();
+        return trackToTrackDTO(trackList);
+    }
+
+    public List<TrackDTO> trackToTrackDTO(List<Track> trackList) {
+        return trackList.stream()
+                .map(track -> TrackMapper.Instance.trackToTrackDTO(track))
+                .collect(Collectors.toList());
     }
 }

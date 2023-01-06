@@ -13,14 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin("http://localhost:4200")
-@RestController(value = "/")
+
+@RestController
 public class UserController {
 
     @Autowired
     private UsersService userServices;
 
-    @PostMapping(value = "login")
+    @PostMapping("/login")
     public ResponseEntity<UserDto> loginUser(@RequestBody LoginModel loginModel) {
         UserDto userDto = userServices.loginUser(loginModel.getEmail(), loginModel.getPassword());
         if (userDto != null) {
@@ -30,12 +30,12 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "users")
+    @GetMapping(value = "/users")
     public List<User> getAllUsers() {
         return userServices.getAll();
     }
 
-    @GetMapping(value = "users/{id}")
+    @GetMapping(value = "/users/{id}")
     public User findUserById(@PathVariable Long id) {
         return userServices.getUserById(id);
     }
@@ -50,7 +50,7 @@ public class UserController {
         return this.userServices.getAllParticipants();
     }
 
-    @GetMapping(value = "organisers")
+    @GetMapping("/users/organisers")
     public List<Organiser> getAllOrganisers() {
         return this.userServices.getAllOrganisers();
     }
