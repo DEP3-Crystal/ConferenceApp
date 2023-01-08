@@ -31,7 +31,10 @@ public class SessionService {
     private ParticipantSessionRepository participantSessionRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ParticipantRepository participantRepository;
 
 
     public Session createSession(SessionDTO sessionDTO) {
@@ -62,7 +65,7 @@ public class SessionService {
     }
 
     public SessionDTO getOneSession(Long id) {
-        Session session = sessionRepository.getReferenceById(id);
+        Session session = sessionRepository.findById(id).get();
         return SessionMapper.Instance.sessionToSessionDTO(session);
     }
 
@@ -201,27 +204,32 @@ public class SessionService {
     }
 
     public boolean rateSession(String email, Long sessionId, int rate) {
-        User user = this.userRepository.findByEmail(email);
-        int updatedRows = this.participantSessionRepository.updateRating(rate, user.getId(), sessionId);
-//        ParticipantSessionId s = new ParticipantSessionId(user.getId(), sessionId);
-//        Optional<ParticipantSession> byId = this.participantSessionRepository.findById(s);
-//        if(byId.isPresent()){
-//            System.out.println("found");
-//        }
-        //From ParticipantSession to Object solved the issue
-//        Object sessionParticipated = this.participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
-//        if (sessionParticipated != null) {
-//            if (sessionParticipated.getRating() != null) {
-//                return false;
-//            } else {
-//                sessionParticipated.setRating(rate);
-//                this.participantSessionRepository.saveAndFlush(sessionParticipated);
-//                return true;
-//            }
-//        }
+        Participant user = this.participantRepository.findByEmail(email);
+        ParticipantSession participatedSession = this.participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
 
-        if(updatedRows>0)
-            return true;
+        if (participatedSession != null) {
+            if (participatedSession.getRating() != null) {
+                return false;
+            } else {
+                participatedSession.setRating(rate);
+                this.participantSessionRepository.saveAndFlush(participatedSession);
+                return true;
+            }
+        }
         return false;
+    }
+
+    public Integer checkRatedSession(String email, Long sessionId) {
+        Participant user = this.participantRepository.findByEmail(email);
+        ParticipantSession participatedSession = this.participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
+        if (participatedSession != null) {
+            if (participatedSession.getRating() != null) {
+                return participatedSession.getRating();
+            } else {
+                return null;
+            }
+        } else {
+            return -1;
+        }
     }
 }

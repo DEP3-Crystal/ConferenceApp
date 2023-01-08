@@ -2,6 +2,7 @@ package al.crystal.conferenceApp.dto;
 
 import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
 import al.crystal.conferenceApp.model.Event;
+import al.crystal.conferenceApp.model.ParticipantSession;
 import al.crystal.conferenceApp.model.Track;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -27,6 +28,7 @@ public class SessionDTO {
     private Track track;
     private Event event;
     private List<SpeakerDTO> speakersDTO;
+//    private int participation; //map sessionRatings size
 
 
 }

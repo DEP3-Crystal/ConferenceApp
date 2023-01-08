@@ -2,6 +2,7 @@ package al.crystal.conferenceApp.controller;
 
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.model.Event;
+import al.crystal.conferenceApp.model.ParticipantSession;
 import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +106,17 @@ public class SessionController {
             return new ResponseEntity<>(true, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/checkrate")
+    public ResponseEntity<Integer> checkRatedSession(@RequestParam(required = true) String email,
+                                                     @RequestParam(required = true) Long sessionId){
+        Integer rated = this.sessionService.checkRatedSession(email, sessionId);
+        if (rated!=null) {
+            return new ResponseEntity<>(rated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
 }
