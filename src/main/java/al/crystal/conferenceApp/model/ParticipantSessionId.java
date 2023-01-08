@@ -13,9 +13,7 @@ import java.io.Serializable;
 public class ParticipantSessionId implements Serializable {
 
 
-//    @Column(name = "user_id")
     private long userId;
 
-//    @Column(name = "session_id")
     private long sessionId;
 }

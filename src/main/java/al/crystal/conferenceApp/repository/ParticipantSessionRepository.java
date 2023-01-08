@@ -15,11 +15,11 @@ public interface ParticipantSessionRepository extends JpaRepository<ParticipantS
     @Query(value = "Delete FROM participant_session ps where (ps.session_id)=:id", nativeQuery = true)
     void deleteBySessionId(Long id);
 
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE participant_session ps SET PS.rating =:rating WHERE ps.user_id = :userId AND ps.session_id = :sessionId", nativeQuery = true)
-    int updateRating (@Param("rating") long rating, @Param("userId") long userId, @Param("sessionId") long sessionId);
+//    @Modifying
+//    @Transactional
+//    @Query(value = "UPDATE participant_session ps SET PS.rating =:rating WHERE ps.user_id = :userId AND ps.session_id = :sessionId", nativeQuery = true)
+//    int updateRating (@Param("rating") long rating, @Param("userId") long userId, @Param("sessionId") long sessionId);
 
-//    @Query(value = "SELECT * FROM participant_session ps WHERE ps.user_id = :userId AND ps.session_id = :sessionId", nativeQuery = true)
-//    Object findByParticipantIdAndSessionId(@Param("userId") long userId, @Param("sessionId") long sessionId);
+    @Query(value = "SELECT * FROM participant_session ps WHERE ps.participant_id = :userId AND ps.session_id = :sessionId", nativeQuery = true)
+    ParticipantSession findByParticipantIdAndSessionId(@Param("userId") long userId, @Param("sessionId") long sessionId);
 }
