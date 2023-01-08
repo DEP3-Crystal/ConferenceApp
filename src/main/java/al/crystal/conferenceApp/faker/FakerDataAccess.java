@@ -69,13 +69,13 @@ public class FakerDataAccess {
 
     public List<Session> sessionList(int numberOfSession, Event event, List<Track> tracks, List<Speaker> speakers) {
         List<SessionDTO> sessionData = IntStream.range(0, numberOfSession).mapToObj(date -> SessionDTO.builder()
-                .title("title")
+                .title(faker.lorem().word())
                 .capacity(faker.random().nextInt(10, 590))
                 .startTime(getFutureDay(1))
                 .endTime(getFutureDay(1))
                 .event(event)
-                .description(faker.lorem().characters(50, 80))
-                .type("none")
+                .description(faker.lorem().paragraph())
+                .type(random(List.of("session","workshop")))
                 .build()).collect(Collectors.toList());
         List<Session> sessions = sessionData.stream().map(sessionDTO -> SessionMapper.Instance.sessionDTOToSession(sessionDTO)).collect(Collectors.toList());
 
@@ -118,7 +118,7 @@ public class FakerDataAccess {
                 .lastName(faker.name().lastName())
                 .biography(faker.lorem().characters(100, 200))
                 .companyName(faker.company().name())
-                .title(faker.book().title())
+                .title(faker.name().title())
                 .events(event)
                 .build()).collect(Collectors.toList());
     }
@@ -138,7 +138,7 @@ public class FakerDataAccess {
                         .firstName(faker.name().firstName())
                         .lastName(faker.name().lastName())
                         .email(email())
-                        .password(faker.funnyName().name())
+                        .password(faker.name().username())
                         .build()).collect(Collectors.toList());
     }
 
@@ -147,7 +147,7 @@ public class FakerDataAccess {
                 participants.stream().map(participant ->
                         new SpeakerParticipantRateDTO(
                                 participant,
-                                SpeakerMapper.Instance.speaker(speakerDTO), faker.random().nextInt(1, 5))
+                                SpeakerMapper.Instance.speaker(speakerDTO), null)
                 )
         ).collect(Collectors.toList());
     }
