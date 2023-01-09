@@ -1,6 +1,6 @@
 package al.crystal.conferenceApp;
 
-import al.crystal.conferenceApp.faker.FakerDataAccess;
+//import al.crystal.conferenceApp.faker.FakerDataAccess;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.repository.SpeakerRateRepository;
 import al.crystal.conferenceApp.service.OrganizerService;
@@ -28,8 +28,8 @@ public class ConferenceAppApplication implements CommandLineRunner {
     private ParticipantService participantService;
     @Autowired
     private SpeakerService speakerService;
-    @Autowired
-    private FakerDataAccess fakerDataAccess;
+//    @Autowired
+//    private FakerDataAccess fakerDataAccess;
     public static void main(String[] args) {
         SpringApplication.run(ConferenceAppApplication.class, args);
     }

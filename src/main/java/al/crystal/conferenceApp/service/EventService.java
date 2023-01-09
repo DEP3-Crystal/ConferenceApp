@@ -21,7 +21,7 @@ public class EventService {
 
     @Autowired
     EventRepository eventRepository;
-    public String saveEvent(EventDTO event) throws Exception {
+    public Event saveEvent(Event event) throws Exception {
 
         LocalDate today =  LocalDate.now();
         if(today.isAfter(event.getStartDay())){
@@ -29,14 +29,14 @@ public class EventService {
         }else if(event.getStartDay().isAfter(event.getEndDay())){
             throw new Exception("The day to start is a after the day to end!");}
 
-        if(!(eventRepository.findEvents(event.getStartDay(),event.getEndDay()).isEmpty())){
+        if(!(eventRepository.findEventsDate(event.getStartDay(),event.getEndDay()).isEmpty())){
             throw new Exception
                     ("Between this Start Date and End Date there is another event!");
         }
 //        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
 //            throw new Exception("not done");
 //        }
-        Optional<Organiser> organiserFoundById = organiserRepository.findById(event.getOrganiserId());
+//        Optional<Organiser> organiserFoundById = organiserRepository.findById(event.getOrganiserId());
 
         Event newEvent = Event.builder()
                 .title(event.getTitle())
@@ -46,16 +46,24 @@ public class EventService {
                 .capacity(event.getCapacity())
                 .eventImage(event.getEventImage())
                 .description(event.getDescription())
-                .organiser(organiserFoundById.get())
+                .organiser(event.getOrganiser())
                 .build();
+        Optional<Organiser> organiserFoundById = organiserRepository.findById(newEvent.getOrganiser().getId());
 
-
-        this.eventRepository.save(newEvent);
-        return "Saved";
+        return this.eventRepository.save(newEvent);
     }
 
     public List<Event> getAllEvents() {
         return this.eventRepository.findAll();
+    }
+
+    public List<Event> eventToShow(){
+        LocalDate today =  LocalDate.now();
+        if(!(eventRepository.eventToShowNow(today)).isEmpty()){
+            return eventRepository.eventToShowNow(today);
+        }else{
+            return eventRepository.eventsToShowAfter(today);
+        }
     }
 
     public Event getEventById(Long id) {

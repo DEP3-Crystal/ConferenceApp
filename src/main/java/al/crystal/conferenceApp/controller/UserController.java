@@ -1,6 +1,5 @@
 package al.crystal.conferenceApp.controller;
 
-
 import al.crystal.conferenceApp.dto.LoginModel;
 import al.crystal.conferenceApp.dto.UserDto;
 import al.crystal.conferenceApp.model.Organiser;
@@ -40,12 +39,17 @@ public class UserController {
         return userServices.getUserById(id);
     }
 
-    @GetMapping(value = "users/{email}")
+    @GetMapping(value = "/users/{email}")
     public User findUserByEmail(@PathVariable String email) {
         return userServices.getUserByEmail(email);
     }
 
-    @GetMapping(value = "participants")
+    @GetMapping(value="/users/type/{email}")
+    public String findUserType(@PathVariable String email){
+        return this.userServices.findType(email);
+    }
+
+    @GetMapping(value = "/user/participants")
     public List<Participant> getAllParticipants() {
         return this.userServices.getAllParticipants();
     }
@@ -77,5 +81,7 @@ public class UserController {
     public List<User> updateUser(@RequestBody User user) {
         return this.userServices.updateUser(user);
     }
+
+
 
 }

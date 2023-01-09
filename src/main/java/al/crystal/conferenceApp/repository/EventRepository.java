@@ -26,5 +26,17 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 //    SELECT * FROM events e where (start_day between e.start_day and e.end_day) or  (end_day between e.start_day and e.end_day)
     @Query(value = "SELECT * FROM conferencedb.events s where (:start_day between s.start_day and s.end_day) or (:end_day between s.start_day and s.end_day)",
             nativeQuery = true)
-    List<Event> findEvents(@Param("start_day") LocalDate start_day,@Param("end_day") LocalDate end_day);
+    List<Event> findEventsDate(@Param("start_day") LocalDate start_day, @Param("end_day") LocalDate end_day);
+
+    @Query(value = "SELECT * FROM conferencedb.events s where (:today <= s.start_day)",
+            nativeQuery = true)
+    List<Event> eventsToShowAfter(@Param("today") LocalDate today);
+
+    @Query(value = "SELECT * FROM conferencedb.events s where (:today between s.start_day and s.end_day)",
+            nativeQuery = true)
+    List<Event> eventToShowNow(@Param("today") LocalDate today);
+
+
+     
+
 }

@@ -145,4 +145,8 @@ public class UsersService {
             return null;
     }
 
+    public String findType(String email){
+        return this.userRepository.findDTypeOfLoggedUser(email);
+    }
+
 }

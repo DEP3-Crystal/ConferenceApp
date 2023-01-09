@@ -18,5 +18,4 @@ public class UserDto {
     private String tweeterUrl;
     private String facebookUrl;
     private String instagramUrl;
-    private String type;
 }
