@@ -35,11 +35,6 @@ public class UserController {
         return userServices.getAll();
     }
 
-    @GetMapping("/users/{id}")
-    public User findUserById(@PathVariable Long id) {
-        return userServices.getUserById(id);
-    }
-
     @GetMapping("/users/participants")
     public List<Participant> getAllParticipants() {
         return this.userServices.getAllParticipants();

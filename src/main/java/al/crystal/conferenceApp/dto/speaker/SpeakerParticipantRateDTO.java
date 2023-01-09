@@ -2,9 +2,7 @@ package al.crystal.conferenceApp.dto.speaker;
 
 import al.crystal.conferenceApp.model.Participant;
 import al.crystal.conferenceApp.model.Speaker;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
@@ -13,5 +11,5 @@ public class SpeakerParticipantRateDTO {
 
     private Participant participant;
     private Speaker speaker;
-    private int rating;
+    private Integer rating;
 }

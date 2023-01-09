@@ -14,9 +14,14 @@ public class EventController {
     @Autowired
     EventService eventService;
 
-    @GetMapping(value = "/")
+    @GetMapping
     public List<Event> getAllEvents() {
         return this.eventService.getAllEvents();
+    }
+
+    @GetMapping(value = "/organiser/{id}")
+    public List<EventDTO> getAllEventsByOrganiserId(@PathVariable Long id) {
+        return this.eventService.getAllEventsByOrganiserId(id);
     }
 
     @GetMapping(value = "/{id}")
@@ -36,7 +41,7 @@ public class EventController {
 
     @PostMapping("/add")
     public Event createEvent(@RequestBody EventDTO eventDTO) {
-            return eventService.saveEvent(eventDTO);
+        return eventService.saveEvent(eventDTO);
 
     }
 

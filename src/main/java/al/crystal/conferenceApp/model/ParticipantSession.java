@@ -1,8 +1,6 @@
 package al.crystal.conferenceApp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,16 +12,14 @@ public class ParticipantSession {
 
     @EmbeddedId
     private ParticipantSessionId id=new ParticipantSessionId();
-    private int rating;
+    private Integer rating;
 
     @ManyToOne
     @MapsId("sessionId")
-    @JoinColumn(name = "session_id")
     private Session session;
 
     @ManyToOne
-    @MapsId("participantId")
-    @JoinColumn(name = "user_id")
+    @MapsId("userId")
     private Participant participant;
 
     public ParticipantSession(int rating, Session session, Participant participant) {

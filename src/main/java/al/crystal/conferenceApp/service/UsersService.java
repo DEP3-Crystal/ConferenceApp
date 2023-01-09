@@ -23,9 +23,11 @@ public class UsersService {
     private ParticipantRepository participantRepository;
 
     public String saveUser(User user) {
-
+        Organiser organiser = new Organiser();
+        Participant participant = new Participant();
         if (user instanceof Organiser) {
-            Organiser organiser = new Organiser();
+            System.out.println("Yes its an instace of Organizer");
+
             organiser.setFirstName(user.getFirstName());
             organiser.setLastName(user.getLastName());
             organiser.setEmail(user.getEmail());
@@ -38,8 +40,8 @@ public class UsersService {
             organiser.setInstagramUrl(((Organiser) user).getInstagramUrl());
             this.organiserRepository.save(organiser);
         } else if (user instanceof Participant) {
+            System.out.println("Yes its an instace of Participant");
 
-            Participant participant = new Participant();
             participant.setFirstName(user.getFirstName());
             participant.setLastName(user.getLastName());
             participant.setEmail(user.getEmail());
@@ -118,15 +120,26 @@ public class UsersService {
         }
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id).get();
-    }
-
     public UserDto loginUser(String email, String password) {
-        User byEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
-        if (byEmailAndPassword != null)
-            return UserMapper.toDto(byEmailAndPassword);
-        else
+        User userEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
+        String type = userRepository.findDTypeOfLoggedUser(email);
+
+        if (userEmailAndPassword != null) {
+            UserDto userDto = UserMapper.toDto(userEmailAndPassword);
+            userDto.setType(type);
+            if (type.equals("O")) {
+
+                Organiser organiser = organiserRepository.findOrganiserBy(userEmailAndPassword.getId());
+
+                userDto.setBiography(organiser.getBiography());
+                userDto.setCompanyName(organiser.getCompanyName());
+                userDto.setFacebookUrl(organiser.getFacebookUrl());
+                userDto.setTweeterUrl(organiser.getTweeterUrl());
+                userDto.setInstagramUrl(organiser.getInstagramUrl());
+                userDto.setLinkedinUrl(organiser.getLinkedinUrl());
+            }
+            return userDto;
+        } else
             return null;
     }
 

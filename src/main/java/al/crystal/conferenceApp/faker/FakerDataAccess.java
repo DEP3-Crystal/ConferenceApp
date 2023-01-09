@@ -22,6 +22,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -54,28 +55,27 @@ public class FakerDataAccess {
     Faker faker = Faker.instance();
 
 
-    public List<Session> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser,int numberOfParticipants) {
+    public List<Session> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser, int numberOfParticipants) {
+
         EventDTO event1 = createEvent(organiser);
         Event event = eventService.saveEvent(event1);
         List<Track> tracks = trackService.saveTracks(trackDTOList(numberOfTracks));
-        List<Speaker> speakers = speakerService.saveAll(speakerList(numberOfSpeakers));
+        List<Speaker> speakers = speakerService.saveAll(speakerList(numberOfSpeakers, event));
         List<Session> sessions = sessionList(numberOfSessions, event, tracks, speakers);
         createSpeakerRate(numberOfParticipants);
         createParticipantSessions();
-        List<Participant> participants = participantService.getParticipants();
-        eventParticipantRelationship(event,participants);
-         return sessions;
+        return sessions;
     }
 
     public List<Session> sessionList(int numberOfSession, Event event, List<Track> tracks, List<Speaker> speakers) {
         List<SessionDTO> sessionData = IntStream.range(0, numberOfSession).mapToObj(date -> SessionDTO.builder()
-                .title("title")
+                .title(faker.lorem().word())
                 .capacity(faker.random().nextInt(10, 590))
                 .startTime(getFutureDay(1))
                 .endTime(getFutureDay(1))
-//                .event(event)
-                .description(faker.lorem().characters(50, 80))
-                .type("none")
+                .event(event)
+                .description(faker.lorem().paragraph())
+                .type(random(List.of("session","workshop")))
                 .build()).collect(Collectors.toList());
         List<Session> sessions = sessionData.stream().map(sessionDTO -> SessionMapper.Instance.sessionDTOToSession(sessionDTO)).collect(Collectors.toList());
 
@@ -90,10 +90,10 @@ public class FakerDataAccess {
 
     public EventDTO createEvent(Organiser organiser) {
         int capacity = faker.random().nextInt(500);
-        return new EventDTO("title", getPastDay(5),
+        return new EventDTO(1L, "title", getPastDay(5),
                 getPastDay(2),
                 faker.address().fullAddress(),
-                capacity, organiser);
+                capacity, organiser.getId(), new ArrayList<>());
     }
 
     private LocalDate getPastDay(int day) {
@@ -103,23 +103,23 @@ public class FakerDataAccess {
 
     public List<TrackDTO> trackDTOList(int numberOfTrack) {
         return IntStream.range(0, numberOfTrack)
-                .mapToObj(data -> new TrackDTO(faker.funnyName().name(),
+                .mapToObj(data -> new TrackDTO(null,faker.funnyName().name(),
                         faker.address().streetName(), "none"))
                 .collect(Collectors.toList());
     }
-
 
     private LocalDateTime getFutureDay(int day) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(faker.date().future(day, TimeUnit.DAYS).getTime()), ZoneId.systemDefault());
     }
 
-    public List<Speaker> speakerList(int numberOfSpeakers) {
+    public List<Speaker> speakerList(int numberOfSpeakers, Event event) {
         return IntStream.range(0, numberOfSpeakers).mapToObj(data -> Speaker.builder()
-                .firstName(faker.name().firstName())
+                .name(faker.name().firstName())
                 .lastName(faker.name().lastName())
-                .biography(faker.lorem().characters(20, 50))
+                .biography(faker.lorem().characters(100, 200))
                 .companyName(faker.company().name())
-                .title("none")
+                .title(faker.name().title())
+                .events(event)
                 .build()).collect(Collectors.toList());
     }
 
@@ -138,7 +138,7 @@ public class FakerDataAccess {
                         .firstName(faker.name().firstName())
                         .lastName(faker.name().lastName())
                         .email(email())
-                        .password(faker.funnyName().name())
+                        .password(faker.name().username())
                         .build()).collect(Collectors.toList());
     }
 
@@ -147,13 +147,13 @@ public class FakerDataAccess {
                 participants.stream().map(participant ->
                         new SpeakerParticipantRateDTO(
                                 participant,
-                                SpeakerMapper.Instance.speaker(speakerDTO), faker.random().nextInt(1, 5))
+                                SpeakerMapper.Instance.speaker(speakerDTO), null)
                 )
         ).collect(Collectors.toList());
     }
 
 
-    public List<SpeakerRate> createSpeakerRate(int numberOfParticipant){
+    public List<SpeakerRate> createSpeakerRate(int numberOfParticipant) {
         List<ParticipantDTO> participant = createParticipant(numberOfParticipant);
         List<Participant> participants = participantService.saveParticipant(participant);
         List<SpeakerParticipantRateDTO> speakerParticipantRateDTOS = speakerRate(participants);
@@ -164,19 +164,16 @@ public class FakerDataAccess {
 
     }
 
-    public List<ParticipantSession> createParticipantSessions(){
+    public List<ParticipantSession> createParticipantSessions() {
 
         List<Participant> participants = participantService.getParticipants();
         List<Session> allSessions = sessionService.getAllSessions();
         List<ParticipantSession> participantSessionList = allSessions.stream().flatMap(session -> participants.stream()
                 .map(participant1 -> new ParticipantSession(random(List.of(1, 2, 3, 4, 5)), session, participant1))
         ).collect(Collectors.toList());
-         return participantSessionRepository.saveAll(participantSessionList);
+        return participantSessionRepository.saveAll(participantSessionList);
     }
-    public void eventParticipantRelationship(Event event,List<Participant> participants){
-        event.setParticipants(participants);
-         eventService.updateEvent(event);
-    }
+
     public String email() {
         return fakeValuesService.bothify("????##@gmail.com");
     }
