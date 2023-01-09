@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity(name = "speaker")
 @Builder
-@ToString
+//@ToString
 public class Speaker {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

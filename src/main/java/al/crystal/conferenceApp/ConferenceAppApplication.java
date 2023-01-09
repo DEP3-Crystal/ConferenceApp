@@ -1,9 +1,11 @@
 package al.crystal.conferenceApp;
 
+import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.dto.OrganizerDTO;
 import al.crystal.conferenceApp.faker.FakerDataAccess;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.repository.SpeakerRateRepository;
+import al.crystal.conferenceApp.service.EventService;
 import al.crystal.conferenceApp.service.OrganizerService;
 import al.crystal.conferenceApp.service.ParticipantService;
 import al.crystal.conferenceApp.service.SpeakerService;
@@ -29,6 +31,9 @@ public class ConferenceAppApplication implements CommandLineRunner {
     private SpeakerService speakerService;
     @Autowired
     private FakerDataAccess fakerDataAccess;
+
+    @Autowired
+    private EventService eventService;
     public static void main(String[] args) {
         SpringApplication.run(ConferenceAppApplication.class, args);
     }
@@ -41,6 +46,9 @@ public class ConferenceAppApplication implements CommandLineRunner {
         organizerService.addOrganizer(organizerDTO);
         Organiser organizer = organizerService.getOrganizer(1L);
         fakerDataAccess.createSessions(5,3,15,organizer,50);
+
+        EventDTO event = fakerDataAccess.createEvent(organizer);
+        eventService.saveEvent(event);
 
     }
 }

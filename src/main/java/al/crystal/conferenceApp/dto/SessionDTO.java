@@ -22,12 +22,12 @@ public class SessionDTO {
     private String description;
     private String type;
     private int capacity;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime startTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", shape = JsonFormat.Shape.STRING)
     private LocalDateTime endTime;
-    private Track track;
-    private Event event;
+//    private Track track;
+//    private Event event;
     private List<SpeakerDTO> speakersDTO;
 
 

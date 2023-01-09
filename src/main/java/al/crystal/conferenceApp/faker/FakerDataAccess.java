@@ -73,7 +73,7 @@ public class FakerDataAccess {
                 .capacity(faker.random().nextInt(10, 590))
                 .startTime(getFutureDay(1))
                 .endTime(getFutureDay(1))
-                .event(event)
+//                .event(event)
                 .description(faker.lorem().characters(50, 80))
                 .type("none")
                 .build()).collect(Collectors.toList());
@@ -137,7 +137,7 @@ public class FakerDataAccess {
                 .mapToObj(i -> ParticipantDTO.builder()
                         .firstName(faker.name().firstName())
                         .lastName(faker.name().lastName())
-                        .email(faker.internet().emailAddress())
+                        .email(email())
                         .password(faker.funnyName().name())
                         .build()).collect(Collectors.toList());
     }

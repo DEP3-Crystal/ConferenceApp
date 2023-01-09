@@ -27,8 +27,8 @@ public class SessionService {
                 .startTime(sessionDTO.getStartTime())
                 .title(sessionDTO.getTitle())
                 .capacity(sessionDTO.getCapacity())
-                .track(sessionDTO.getTrack())
-                .event(sessionDTO.getEvent())
+//                .track(sessionDTO.getTrack())
+//                .event(sessionDTO.getEvent())
                 .type(sessionDTO.getType())
 //                .speakers(sessionDTO.getSpeakers())
                 .build();
