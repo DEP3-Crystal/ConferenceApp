@@ -1,7 +1,7 @@
 package al.crystal.conferenceApp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -9,11 +9,12 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 public class SpeakerRate {
 
     @EmbeddedId
-    private SpeakerRateId id=new SpeakerRateId();
+    private SpeakerRateId id = new SpeakerRateId();
 
     @ManyToOne
     @MapsId("userId")
@@ -24,7 +25,7 @@ public class SpeakerRate {
     @MapsId("speakerId")
     @JoinColumn(name = "speaker_id")
     private Speaker speaker;
-
-    private int rating;
+    @Nullable
+    private Integer rating;
 
 }

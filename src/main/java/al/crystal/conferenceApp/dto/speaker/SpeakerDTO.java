@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SpeakerDTO {
-    private long id;
+    private Long id;
     private String name;
     private String lastName;
     private String companyName;

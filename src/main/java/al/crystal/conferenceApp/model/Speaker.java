@@ -28,7 +28,7 @@ public class Speaker {
     private String facebookUrl;
     private String instagramUrl;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "speakers")
     private Set<Session> sessions;
 
@@ -50,6 +50,13 @@ public class Speaker {
         this.tweeterUrl = tweeterUrl;
         this.facebookUrl = facebookUrl;
         this.instagramUrl = instagramUrl;
+    }
+
+    @PreRemove
+    private void removeSessionsFromSpeakers(){
+        for(Session s : sessions){
+            s.getSpeakers().remove(this);
+        }
     }
 
 

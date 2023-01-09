@@ -11,5 +11,5 @@ public class SpeakerParticipantRateDTO {
 
     private Participant participant;
     private Speaker speaker;
-    private int rating;
+    private Integer rating;
 }

@@ -6,13 +6,14 @@ import al.crystal.conferenceApp.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/events")
 public class EventController {
     @Autowired
-    EventService eventService;
+    private EventService eventService;
 
     @GetMapping
     public List<Event> getAllEvents() {
@@ -29,20 +30,29 @@ public class EventController {
         return this.eventService.getEventById(id);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @GetMapping(value="/toShow")
+    public List<Event> eventToShow(){
+        return eventService.eventToShow();
+    }
+
+    @DeleteMapping(value = "/{id}")
     public List<Event> deleteEvent(@PathVariable Long id) {
         return this.eventService.deleteEvent(id);
     }
 
-    @PutMapping(value = "/update")
+    @PutMapping(value = "/")
     public List<Event> updateEvents(@RequestBody Event event) {
         return this.eventService.updateEvent(event);
     }
 
-    @PostMapping("/add")
-    public Event createEvent(@RequestBody EventDTO eventDTO) {
-        return eventService.saveEvent(eventDTO);
-
+    @PostMapping(value = "/")
+    public Event createEvent(@RequestBody Event event) {
+        try {
+            System.out.println(event);
+            return eventService.saveEvent(event);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
