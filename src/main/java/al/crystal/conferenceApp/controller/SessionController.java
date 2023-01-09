@@ -45,7 +45,8 @@ public class SessionController {
 
     @GetMapping("/")
     public List<SessionDTO> getSessions() {
-        return sessionService.getAllSessionsDTO();
+        List<SessionDTO> allSessionsDTO = sessionService.getAllSessionsDTO();
+        return allSessionsDTO;
     }
 
 
@@ -119,4 +120,6 @@ public class SessionController {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
+
+
 }
