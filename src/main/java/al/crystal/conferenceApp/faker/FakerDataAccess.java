@@ -5,6 +5,7 @@ import al.crystal.conferenceApp.dto.ParticipantDTO;
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.dto.TrackDTO;
 import al.crystal.conferenceApp.dto.speaker.SpeakerParticipantRateDTO;
+import al.crystal.conferenceApp.mapper.EventMapper;
 import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
 import al.crystal.conferenceApp.mapper.SpeakerParticipantRateMapper;
@@ -58,7 +59,13 @@ public class FakerDataAccess {
     public List<Session> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser, int numberOfParticipants) {
 
         EventDTO event1 = createEvent(organiser);
-        Event event = eventService.saveEvent(event1);
+        Event evententity = EventMapper.Instance.eventDTOToEvent(event1);
+        Event event = null;
+        try {
+            event = eventService.saveEvent( evententity);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         List<Track> tracks = trackService.saveTracks(trackDTOList(numberOfTracks));
         List<Speaker> speakers = speakerService.saveAll(speakerList(numberOfSpeakers, event));
         List<Session> sessions = sessionList(numberOfSessions, event, tracks, speakers);
