@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 //@Configuration
@@ -27,8 +29,8 @@ public class ConferenceAppApplication implements CommandLineRunner {
     private ParticipantService participantService;
     @Autowired
     private SpeakerService speakerService;
-    @Autowired
-    private FakerDataAccess fakerDataAccess;
+//    @Autowired
+//    private FakerDataAccess fakerDataAccess;
     public static void main(String[] args) {
         SpringApplication.run(ConferenceAppApplication.class, args);
     }

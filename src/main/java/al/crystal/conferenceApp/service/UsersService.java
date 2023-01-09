@@ -57,7 +57,9 @@ public class UsersService {
     public List<User> getAll() {
         return this.userRepository.findAll();
     }
-
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
     public List<Participant> getAllParticipants() {
         return this.participantRepository.findAll();
     }
@@ -141,6 +143,10 @@ public class UsersService {
             return userDto;
         } else
             return null;
+    }
+
+    public String findType(String email){
+        return this.userRepository.findDTypeOfLoggedUser(email);
     }
 
 }
