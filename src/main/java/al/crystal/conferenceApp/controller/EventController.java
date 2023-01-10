@@ -46,13 +46,15 @@ public class EventController {
     }
 
     @PostMapping(value = "/")
-    public Event createEvent(@RequestBody Event event) {
-        try {
-            System.out.println(event);
+    public Event createEvent(@RequestBody Event event) throws Exception {
             return eventService.saveEvent(event);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    }
+
+    @GetMapping(value = "/subscribe")
+    public Boolean subscribePlan(@RequestParam(required = true) String subscriber,
+                             @RequestParam(required = true) Long eventId,
+                             @RequestParam(required = true) String plan) throws Exception {
+        return eventService.subscribePlan(subscriber, eventId, plan);
     }
 
 

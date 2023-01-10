@@ -56,9 +56,9 @@ public class SpeakerController {
 
     @GetMapping("/checkrate")
     public ResponseEntity<Integer> checkRatedSession(@RequestParam(required = true) String email,
-                                                     @RequestParam(required = true) Long speakerId){
+                                                     @RequestParam(required = true) Long speakerId) {
         Integer rated = this.speakerService.checkRatedSpeaker(email, speakerId);
-        if (rated!=null) {
+        if (rated != null) {
             return new ResponseEntity<>(rated, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);

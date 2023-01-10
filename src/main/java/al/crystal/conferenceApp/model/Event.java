@@ -35,12 +35,12 @@ public class Event {
     private int eventStatus;
     private int capacity;
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private Organiser organiser;
 
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "participant_event",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
@@ -50,7 +50,7 @@ public class Event {
     private String description;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "events")
+    @OneToMany(mappedBy = "events",cascade = CascadeType.ALL)
     private List<Speaker> speakers;
 
 }
