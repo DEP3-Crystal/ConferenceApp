@@ -4,6 +4,7 @@ import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
 import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.service.SpeakerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,14 +16,19 @@ public class SpeakerController {
     @Autowired
     private SpeakerService speakerService;
 
-    @PostMapping("/add")
-    public String createSpeaker(@RequestBody Speaker speaker) {
-        return speakerService.saveSpeaker(speaker);
+    @PostMapping("")
+    public List<SpeakerDTO> createSpeaker(@RequestBody Speaker speaker) {
+        return (speakerService.saveSpeaker(speaker));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/{eventId}")
     public List<SpeakerDTO> getEventSpeakers(@RequestParam(required = true) Long eventId) {
         return speakerService.getAllSpeakersByEvent(eventId);
+    }
+
+    @GetMapping("")
+    public List<SpeakerDTO> getAllSpeaker(){
+        return speakerService.getAllSpeakers();
     }
 
 }

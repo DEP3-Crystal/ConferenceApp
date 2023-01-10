@@ -23,8 +23,8 @@ import java.util.List;
 @Builder
 public class EventDTO {
 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private  Long id;
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    private  Long id;
     private String title;
     @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
     private LocalDate startDay;
@@ -39,6 +39,6 @@ public class EventDTO {
     private List<SpeakerDTO> speakerDTOS;
 
 
-    public  EventDTO(long l, String title, LocalDate pastDay, LocalDate pastDay1, String fullAddress, int capacity, long id, ArrayList<Event> es) {
-    }
+//    public  EventDTO(long l, String title, LocalDate pastDay, LocalDate pastDay1, String fullAddress, int capacity, long id, ArrayList<Event> es) {
+//    }
 }

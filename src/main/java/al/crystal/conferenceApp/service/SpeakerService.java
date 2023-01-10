@@ -6,6 +6,7 @@ import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.repository.SpeakerRateRepository;
 import al.crystal.conferenceApp.repository.SpeakerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public class SpeakerService {
     @Autowired
     private SpeakerRateRepository speakerRateRepository;
 
-    public String saveSpeaker(Speaker speaker) {
-        speakerRepository.save(speaker);
-        return "done";
+    public List<SpeakerDTO> saveSpeaker(Speaker speaker) {
+         speakerRepository.save(speaker);
+        return this.getAllSpeakers();
     }
     public List<SpeakerDTO> saveListOfSpeaker(List<Speaker> speakers){
         List<Speaker> speakers1 = speakerRepository.saveAll(speakers);

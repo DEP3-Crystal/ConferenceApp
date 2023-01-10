@@ -2,8 +2,11 @@ package al.crystal.conferenceApp.service;
 
 import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.mapper.EventMap;
+import al.crystal.conferenceApp.mapper.EventMapper;
+import al.crystal.conferenceApp.mapper.SpeakerMapper;
 import al.crystal.conferenceApp.model.Event;
 import al.crystal.conferenceApp.model.Organiser;
+import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.repository.EventRepository;
 import al.crystal.conferenceApp.repository.OrganiserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +56,9 @@ public class EventService {
         return this.eventRepository.save(newEvent);
     }
 
-    public List<Event> getAllEvents() {
-        return this.eventRepository.findAll();
+    public List<EventDTO> getAllEvents() {
+        List<Event> events =  this.eventRepository.findAll();
+        return events.stream().map(event -> EventMapper.Instance.eventDto(event)).collect(Collectors.toList());
     }
 
     public List<Event> eventToShow(){
@@ -75,7 +79,7 @@ public class EventService {
         return this.eventRepository.findAll();
     }
 
-    public List<Event> updateEvent(Event event) {
+    public List<EventDTO> updateEvent(Event event) {
         Event existingEvent = this.eventRepository.findById(event.getId()).orElse(null);
         if (existingEvent != null) {
             existingEvent.setTitle(event.getTitle());
