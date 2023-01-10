@@ -1,6 +1,7 @@
 package al.crystal.conferenceApp;
 
-//import al.crystal.conferenceApp.faker.FakerDataAccess;
+import al.crystal.conferenceApp.dto.OrganizerDTO;
+import al.crystal.conferenceApp.faker.FakerDataAccess;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.repository.SpeakerRateRepository;
 import al.crystal.conferenceApp.service.OrganizerService;
@@ -36,8 +37,11 @@ public class ConferenceAppApplication implements CommandLineRunner {
     Logger logger= LoggerFactory.getLogger(this.getClass().getName());
     @Override
     public void run(String... args) throws Exception {
+//        OrganizerDTO organizerDTO=new OrganizerDTO("AdminName","AdminLastName","admin@admin.com","admin",
+//                "CompanyName","Here is the biography",null,null,null,null);
+//        organizerService.addOrganizer(organizerDTO);
 //        Organiser organizer = organizerService.getOrganizer(1L);
 //        logger.info(organizer.toString());
-//        fakerDataAccess.createSessions(5,3,5,organizer,30);
+//        fakerDataAccess.createSessions(5,3,5,organizer,15);
     }
 }

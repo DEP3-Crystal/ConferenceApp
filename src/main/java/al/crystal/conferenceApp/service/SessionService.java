@@ -1,16 +1,10 @@
 package al.crystal.conferenceApp.service;
 
-import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.dto.SessionDTO;
 import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
-import al.crystal.conferenceApp.model.Event;
-import al.crystal.conferenceApp.model.Session;
-import al.crystal.conferenceApp.model.Speaker;
-import al.crystal.conferenceApp.model.Track;
-import al.crystal.conferenceApp.repository.EventRepository;
-import al.crystal.conferenceApp.repository.SessionRepository;
-import al.crystal.conferenceApp.repository.TrackRepository;
+import al.crystal.conferenceApp.model.*;
+import al.crystal.conferenceApp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -32,6 +26,15 @@ public class SessionService {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private ParticipantSessionRepository participantSessionRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ParticipantRepository participantRepository;
 
 
     public Session createSession(SessionDTO sessionDTO) {
@@ -62,8 +65,11 @@ public class SessionService {
     }
 
     public SessionDTO getOneSession(Long id) {
-        Session session = sessionRepository.getReferenceById(id);
-        return SessionMapper.Instance.sessionToSessionDTO(session);
+        Session session = sessionRepository.findById(id).get();
+        SessionDTO sessionDTO = SessionMapper.Instance.sessionToSessionDTO(session);
+        sessionDTO.setParticipation(participantSessionRepository.getParticipationForSession(sessionDTO.getId()));
+        return sessionDTO;
+
     }
 
     private List<SessionDTO> getSessionsByDateBasedOnEvent(String date, Long id) {
@@ -101,7 +107,8 @@ public class SessionService {
 
     public List<SessionDTO> getAllSessionsDTO() {
         List<Session> sessionList = sessionRepository.findAll(Sort.by("startTime"));
-        return sessionsToSessionsDTO(sessionList);
+        List<SessionDTO> sessionDTOS = sessionsToSessionsDTO(sessionList);
+        return sessionDTOS;
     }
 
     public List<SessionDTO> getSessions(String date, String location, Long id) {
@@ -121,7 +128,10 @@ public class SessionService {
             return getSessionsByDate(date);
         } else {
             List<Session> sessionList = getAllSessions();
-            return sessionsToSessionsDTO(sessionList);
+            List<SessionDTO> sessionDTOS = sessionsToSessionsDTO(sessionList);
+            sessionDTOS.forEach(sessionDTO ->
+                    sessionDTO.setParticipation(participantSessionRepository.getParticipationForSession(sessionDTO.getId())));
+            return sessionDTOS;
         }
     }
 
@@ -177,4 +187,56 @@ public class SessionService {
     }
 
 
+    public void deleteSession(Long id) {
+
+        participantSessionRepository.deleteBySessionId(id);
+        sessionRepository.deleteById(id);
+    }
+
+    public SessionDTO updateSession(SessionDTO sessionDTO) {
+        Session sessionOnDB = this.sessionRepository.findById(sessionDTO.getId()).get();
+
+        sessionOnDB.setTitle(sessionDTO.getTitle());
+        sessionOnDB.setDescription(sessionDTO.getDescription());
+        sessionOnDB.setType(sessionDTO.getType());
+        sessionOnDB.setCapacity(sessionDTO.getCapacity());
+        sessionOnDB.setStartTime(sessionDTO.getStartTime());
+        sessionOnDB.setEndTime(sessionDTO.getEndTime());
+        sessionOnDB.setTrack(sessionDTO.getTrack());
+        sessionOnDB.setSpeakers(sessionDTO.getSpeakersDTO().stream().map(speakerDTO -> SpeakerMapper.Instance.speaker(speakerDTO)).collect(Collectors.toList()));
+
+        Session session = this.sessionRepository.saveAndFlush(sessionOnDB);
+        return SessionMapper.Instance.sessionToSessionDTO(session);
+
+    }
+
+    public boolean rateSession(String email, Long sessionId, int rate) {
+        Participant user = this.participantRepository.findByEmail(email);
+        ParticipantSession participatedSession = this.participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
+
+        if (participatedSession != null) {
+            if (participatedSession.getRating() != null) {
+                return false;
+            } else {
+                participatedSession.setRating(rate);
+                this.participantSessionRepository.saveAndFlush(participatedSession);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Integer checkRatedSession(String email, Long sessionId) {
+        Participant user = this.participantRepository.findByEmail(email);
+        ParticipantSession participatedSession = this.participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
+        if (participatedSession != null) {
+            if (participatedSession.getRating() != null) {
+                return participatedSession.getRating();
+            } else {
+                return null;
+            }
+        } else {
+            return -1;
+        }
+    }
 }
