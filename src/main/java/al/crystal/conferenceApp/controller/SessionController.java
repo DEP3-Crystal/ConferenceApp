@@ -1,9 +1,10 @@
 package al.crystal.conferenceApp.controller;
 
+import al.crystal.conferenceApp.ConferenceAppApplication;
 import al.crystal.conferenceApp.dto.SessionDTO;
-import al.crystal.conferenceApp.model.Event;
-import al.crystal.conferenceApp.model.ParticipantSession;
 import al.crystal.conferenceApp.model.Session;
+import al.crystal.conferenceApp.model.message_model.SessionMessage;
+import al.crystal.conferenceApp.rabbitMq.publish.PublishSession;
 import al.crystal.conferenceApp.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,8 +60,7 @@ public class SessionController {
     @GetMapping("/locations")
     public List<String> getLocations(@RequestParam(required = false) String date,
                                      @RequestParam(required = false) Long eventId) {
-        List<String> ls = this.sessionService.getSessionsLocations(date, eventId);
-        return ls;
+        return this.sessionService.getSessionsLocations(date, eventId);
     }
 
     @DeleteMapping("/{id}")
@@ -102,7 +102,10 @@ public class SessionController {
         int rate = Integer.parseInt(body.get("rateSession"));
 
         boolean submitted = this.sessionService.rateSession(email, sessionId, rate);
+
         if (submitted) {
+            PublishSession publishSession = new PublishSession(ConferenceAppApplication.connection);
+            publishSession.sendMessage(new SessionMessage(sessionId.toString()));
             return new ResponseEntity<>(true, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);

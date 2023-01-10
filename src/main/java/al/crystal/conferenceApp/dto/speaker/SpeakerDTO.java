@@ -17,4 +17,5 @@ public class SpeakerDTO {
     private String facebookUrl;
     private String instagramUrl;
 
+
 }

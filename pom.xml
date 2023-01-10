@@ -103,6 +103,12 @@
             <artifactId>postgresql</artifactId>
             <version>42.5.1</version>
         </dependency>
+<!--     RabbitMq-->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.16.0</version>
+        </dependency>
 
     </dependencies>
 

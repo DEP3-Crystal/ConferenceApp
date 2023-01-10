@@ -6,6 +6,9 @@ import al.crystal.conferenceApp.model.Event;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.repository.EventRepository;
 import al.crystal.conferenceApp.repository.OrganiserRepository;
+import al.crystal.conferenceApp.service.job_ruunner.EventJobRunner;
+import al.crystal.conferenceApp.service.job_ruunner.SessionJobRunner;
+import al.crystal.conferenceApp.service.job_ruunner.SpeakerJobRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +20,12 @@ import java.util.stream.Collectors;
 public class EventService {
     @Autowired
     private EventRepository eventRepository;
-
+    @Autowired
+    private SpeakerJobRunner speakerJobRunner;
+    @Autowired
+    private SessionJobRunner sessionJobRunner;
+    @Autowired
+    private EventJobRunner eventJobRunner;
     @Autowired
     private OrganiserRepository organiserRepository;
 
@@ -37,7 +45,11 @@ public class EventService {
                 .organiser(organiserFoundById.get())
                 .build();
 
-        return this.eventRepository.save(newEvent);
+        Event save = this.eventRepository.save(newEvent);
+        sessionJobRunner.scheduleTaskWithDelay(save.getEndDay());
+        speakerJobRunner.scheduleTaskWithDelay(save.getEndDay());
+        return save;
+
     }
 
     public List<Event> getAllEvents() {

@@ -1,5 +1,6 @@
 package al.crystal.conferenceApp.controller;
 
+import al.crystal.conferenceApp.ConferenceAppApplication;
 import al.crystal.conferenceApp.dto.SpeakerRateForRatingDto;
 import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
 import al.crystal.conferenceApp.exception.ResourceAlreadyExistsException;
@@ -7,6 +8,8 @@ import al.crystal.conferenceApp.exception.ResourceNotFoundException;
 import al.crystal.conferenceApp.mapper.SpeakerRateSecondMapper;
 import al.crystal.conferenceApp.model.Speaker;
 import al.crystal.conferenceApp.model.SpeakerRate;
+import al.crystal.conferenceApp.model.message_model.SessionMessage;
+import al.crystal.conferenceApp.rabbitMq.publish.PublishSpeaker;
 import al.crystal.conferenceApp.service.SpeakerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,6 +48,8 @@ public class SpeakerController {
             SpeakerRate ratedSpeaker = this.speakerService.rateSpeaker(speakerRateById, rateSpeaker);
             if (ratedSpeaker != null) {
                 SpeakerRateForRatingDto speakerRateForRatingDto = SpeakerRateSecondMapper.Instance.speakerRateDto(ratedSpeaker);
+                PublishSpeaker publishSpeaker=new PublishSpeaker(ConferenceAppApplication.connection);
+                publishSpeaker.sendMessage(new SessionMessage(speakerId.toString()));
                 return speakerRateForRatingDto;
             } else {
                 throw new ResourceAlreadyExistsException("This Speaker has already been evaluated");
