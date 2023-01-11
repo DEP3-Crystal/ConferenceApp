@@ -62,7 +62,8 @@ public class FakerDataAccess {
         Event evententity = EventMapper.Instance.eventDTOToEvent(event1);
         Event event = null;
         try {
-            event = eventService.saveEvent( evententity);
+            System.out.println(evententity);
+            event = eventService.saveEvent(evententity);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -78,8 +79,8 @@ public class FakerDataAccess {
         List<SessionDTO> sessionData = IntStream.range(0, numberOfSession).mapToObj(date -> SessionDTO.builder()
                 .title(faker.lorem().word())
                 .capacity(faker.random().nextInt(10, 590))
-                .startTime(getFutureDay(1))
-                .endTime(getFutureDay(1))
+                .startTime(getFutureDay(1).atTime(9,55))
+                .endTime(getFutureDay(1).atTime(11,55))
                 .event(event)
                 .description(faker.lorem().paragraph())
                 .type(random(List.of("session","workshop")))
@@ -97,10 +98,10 @@ public class FakerDataAccess {
 
     public EventDTO createEvent(Organiser organiser) {
         int capacity = faker.random().nextInt(500);
-        return new EventDTO(1L, "title", getPastDay(5),
-                getPastDay(2),
+        return new EventDTO( "title", getFutureDay(4),
+                getFutureDay(8),
                 faker.address().fullAddress(),
-                capacity, organiser.getId(), new ArrayList<>());
+                capacity, organiser,faker.lorem().characters(100),faker.lorem().characters(50));
     }
 
     private LocalDate getPastDay(int day) {
@@ -115,8 +116,8 @@ public class FakerDataAccess {
                 .collect(Collectors.toList());
     }
 
-    private LocalDateTime getFutureDay(int day) {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(faker.date().future(day, TimeUnit.DAYS).getTime()), ZoneId.systemDefault());
+    private LocalDate getFutureDay(int day) {
+        return LocalDate.ofInstant(Instant.ofEpochMilli(faker.date().future(day, TimeUnit.DAYS).getTime()), ZoneId.systemDefault());
     }
 
     public List<Speaker> speakerList(int numberOfSpeakers, Event event) {

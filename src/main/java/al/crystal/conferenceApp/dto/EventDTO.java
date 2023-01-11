@@ -23,22 +23,31 @@ import java.util.List;
 @Builder
 public class EventDTO {
 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private  Long id;
+    private Long id;
     private String title;
-    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate startDay;
-    @JsonFormat(pattern="yyyy-MM-dd", shape=JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate endDay;
     private String location;
     private int capacity;
     private Organiser organiser;
     private String description;
     private String eventImage;
-    private Long organiserId;
+
     private List<SpeakerDTO> speakerDTOS;
 
+    public EventDTO(String title, LocalDate startDay, LocalDate endDay, String location, int capacity, Organiser organiser, String description, String eventImage) {
+        this.title = title;
+        this.startDay = startDay;
+        this.endDay = endDay;
+        this.location = location;
+        this.capacity = capacity;
+        this.organiser = organiser;
+        this.description = description;
+        this.eventImage = eventImage;
 
-    public  EventDTO(long l, String title, LocalDate pastDay, LocalDate pastDay1, String fullAddress, int capacity, long id, ArrayList<Event> es) {
     }
 }
+
+

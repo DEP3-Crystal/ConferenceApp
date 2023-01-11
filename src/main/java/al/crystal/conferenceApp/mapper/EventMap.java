@@ -13,7 +13,7 @@ public class EventMap {
                 .startDay(event.getStartDay())
                 .endDay(event.getEndDay())
                 .capacity(event.getCapacity())
-                .organiserId(event.getOrganiser().getId())
+//                .organiserId(event.getOrganiser().getId())
                 .build();
     }
 }

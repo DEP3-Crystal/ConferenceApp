@@ -28,6 +28,8 @@ public class Speaker {
     private String facebookUrl;
     private String instagramUrl;
 
+    private double speakerRate;
+
 //    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "speakers")
     private Set<Session> sessions;

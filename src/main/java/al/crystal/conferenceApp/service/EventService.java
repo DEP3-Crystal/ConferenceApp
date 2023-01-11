@@ -27,48 +27,33 @@ public class EventService {
 
     @Autowired
     EventRepository eventRepository;
+
     public Event saveEvent(Event event) throws Exception {
 
-        LocalDate today =  LocalDate.now();
-        if(today.isAfter(event.getStartDay())){
-            throw new Exception("The day to start is a past Day!");
-        }else if(event.getStartDay().isAfter(event.getEndDay())){
-            throw new Exception("The day to start is a after the day to end!");}
-
-        if(!(eventRepository.findEventsDate(event.getStartDay(),event.getEndDay()).isEmpty())){
-            throw new Exception
-                    ("Between this Start Date and End Date there is another event!");
-        }
-//        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
-//            throw new Exception("not done");
+//        LocalDate today = LocalDate.now();
+//        if (event.getStartDay().isAfter(event.getEndDay())) {
+//            throw new Exception("The day to start is a after the day to end!");
 //        }
-//        Optional<Organiser> organiserFoundById = organiserRepository.findById(event.getOrganiserId());
+//        if (!(eventRepository.findEventsDate(event.getStartDay(), event.getEndDay()).isEmpty())) {
+//            throw new Exception
+//                    ("Between this Start Date and End Date there is another event!");
+//        }
 
-        Event newEvent = Event.builder()
-                .title(event.getTitle())
-                .startDay(event.getStartDay())
-                .endDay(event.getEndDay())
-                .location(event.getLocation())
-                .capacity(event.getCapacity())
-                .eventImage(event.getEventImage())
-                .description(event.getDescription())
-                .organiser(event.getOrganiser())
-                .build();
-        Optional<Organiser> organiserFoundById = organiserRepository.findById(newEvent.getOrganiser().getId());
         sessionJobRunner.scheduleTaskWithDelay(event.getEndDay());
         speakerJobRunner.scheduleTaskWithDelay(event.getEndDay());
-        return this.eventRepository.save(newEvent);
+        System.out.println(event);
+        return this.eventRepository.save(event);
     }
 
     public List<Event> getAllEvents() {
         return this.eventRepository.findAll();
     }
 
-    public List<Event> eventToShow(){
-        LocalDate today =  LocalDate.now();
-        if(!(eventRepository.eventToShowNow(today)).isEmpty()){
+    public List<Event> eventToShow() {
+        LocalDate today = LocalDate.now();
+        if (!(eventRepository.eventToShowNow(today)).isEmpty()) {
             return eventRepository.eventToShowNow(today);
-        }else{
+        } else {
             return eventRepository.eventsToShowAfter(today);
         }
     }
