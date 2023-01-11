@@ -36,7 +36,7 @@ public class Event {
     private int eventStatus;
     private int capacity;
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private Organiser organiser;
 

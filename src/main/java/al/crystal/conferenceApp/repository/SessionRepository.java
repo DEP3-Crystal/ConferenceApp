@@ -53,6 +53,8 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     @Query(value = "SELECT DISTINCT (t.room_location) FROM tracks t JOIN session s ON (t.id=s.track_id) where s.event_id=:eventId", nativeQuery = true)
     List<String> findDistinctLocationBasedOnEventId(Long eventId);
 
+    List<Session> findByEventIdAndType(Long eventId, String type);
+
 
 }
 

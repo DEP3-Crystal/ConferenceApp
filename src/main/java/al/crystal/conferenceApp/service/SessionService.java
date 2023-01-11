@@ -194,7 +194,7 @@ public class SessionService {
     }
 
     public SessionDTO updateSession(SessionDTO sessionDTO) {
-        Session sessionOnDB = this.sessionRepository.findById(sessionDTO.getId()).get();
+        Session sessionOnDB = sessionRepository.findById(sessionDTO.getId()).get();
 
         sessionOnDB.setTitle(sessionDTO.getTitle());
         sessionOnDB.setDescription(sessionDTO.getDescription());
@@ -205,21 +205,21 @@ public class SessionService {
         sessionOnDB.setTrack(sessionDTO.getTrack());
         sessionOnDB.setSpeakers(sessionDTO.getSpeakersDTO().stream().map(speakerDTO -> SpeakerMapper.Instance.speaker(speakerDTO)).collect(Collectors.toList()));
 
-        Session session = this.sessionRepository.saveAndFlush(sessionOnDB);
+        Session session = sessionRepository.saveAndFlush(sessionOnDB);
         return SessionMapper.Instance.sessionToSessionDTO(session);
 
     }
 
     public boolean rateSession(String email, Long sessionId, int rate) {
-        Participant user = this.participantRepository.findByEmail(email);
-        ParticipantSession participatedSession = this.participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
+        Participant user = participantRepository.findByEmail(email);
+        ParticipantSession participatedSession = participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
 
         if (participatedSession != null) {
             if (participatedSession.getRating() != null) {
                 return false;
             } else {
                 participatedSession.setRating(rate);
-                this.participantSessionRepository.saveAndFlush(participatedSession);
+                participantSessionRepository.saveAndFlush(participatedSession);
                 return true;
             }
         }
@@ -227,16 +227,18 @@ public class SessionService {
     }
 
     public Integer checkRatedSession(String email, Long sessionId) {
-        Participant user = this.participantRepository.findByEmail(email);
-        ParticipantSession participatedSession = this.participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
-        if (participatedSession != null) {
-            if (participatedSession.getRating() != null) {
-                return participatedSession.getRating();
+        Participant user = participantRepository.findByEmail(email);
+        if (user != null) {
+            ParticipantSession participatedSession = participantSessionRepository.findByParticipantIdAndSessionId(user.getId(), sessionId);
+            if (participatedSession != null) {
+                if (participatedSession.getRating() != null) {
+                    return participatedSession.getRating();
+                } else {
+                    return null;
+                }
             } else {
-                return null;
+                return -1;
             }
-        } else {
-            return -1;
-        }
+        } else return -1;
     }
 }
