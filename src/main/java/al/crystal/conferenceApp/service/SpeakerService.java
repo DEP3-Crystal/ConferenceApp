@@ -7,7 +7,6 @@ import al.crystal.conferenceApp.repository.ParticipantRepository;
 import al.crystal.conferenceApp.repository.SpeakerRateRepository;
 import al.crystal.conferenceApp.repository.SpeakerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +21,16 @@ public class SpeakerService {
 
     @Autowired
     private SpeakerRateRepository speakerRateRepository;
+
     @Autowired
     private ParticipantRepository participantRepository;
 
     public List<SpeakerDTO> saveSpeaker(Speaker speaker) {
-         speakerRepository.save(speaker);
+        if(speaker != null){
+        speakerRepository.save(speaker);
+        }
         return this.getAllSpeakers();
-
+    }
 
     public List<SpeakerDTO> saveListOfSpeaker(List<Speaker> speakers) {
         List<Speaker> speakers1 = speakerRepository.saveAll(speakers);
@@ -61,7 +63,8 @@ public class SpeakerService {
     }
 
     public SpeakerRate findSpeakerRateById(String email, Long speakerId) {
-        Participant user = this.participantRepository.findByEmail(email);
+        Participant user = this.participantRepository.findByEmail(email)
+                ;
         if (user != null) {
             SpeakerRateId speakerRateId = new SpeakerRateId(user.getId(), speakerId);
             Optional<SpeakerRate> speakerRate = speakerRateRepository.findById(speakerRateId);
@@ -76,7 +79,8 @@ public class SpeakerService {
     }
 
     public Integer checkRatedSpeaker(String email, Long speakerId) {
-        Participant user = this.participantRepository.findByEmail(email);
+        Participant user = this.participantRepository.findByEmail(email)
+                ;
         if (user != null) {
             SpeakerRateId speakerRateId = new SpeakerRateId(user.getId(), speakerId);
             Optional<SpeakerRate> speakerRate = speakerRateRepository.findById(speakerRateId);
@@ -84,7 +88,7 @@ public class SpeakerService {
                 if(speakerRate.get().getRating()!=null) {
                     return speakerRate.get().getRating();}
                 else {
-                   return  null;
+                    return  null;
                 }
             } else {
                 return -1;

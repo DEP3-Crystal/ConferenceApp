@@ -16,7 +16,7 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping
-    public List<EventDTO> getAllEvents() {
+    public List<Event> getAllEvents() {
         return this.eventService.getAllEvents();
     }
 
@@ -41,8 +41,12 @@ public class EventController {
     }
 
     @PutMapping(value = "/")
-    public List<EventDTO> updateEvents(@RequestBody Event event) {
-        return this.eventService.updateEvent(event);
+    public List<Event> updateEvents(@RequestBody Event event) {
+        try {
+            return this.eventService.updateEvent(event);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping(value = "/")

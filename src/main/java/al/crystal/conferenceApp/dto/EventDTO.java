@@ -39,6 +39,6 @@ public class EventDTO {
     private List<SpeakerDTO> speakerDTOS;
 
 
-//    public  EventDTO(long l, String title, LocalDate pastDay, LocalDate pastDay1, String fullAddress, int capacity, long id, ArrayList<Event> es) {
-//    }
+    public  EventDTO(long l, String title, LocalDate pastDay, LocalDate pastDay1, String fullAddress, int capacity, long id, ArrayList<Event> es) {
+    }
 }

@@ -25,12 +25,12 @@ public class SpeakerController {
     private SpeakerService speakerService;
 
     @PostMapping("/add")
-    public String createSpeaker(@RequestBody Speaker speaker) {
+    public List<SpeakerDTO> createSpeaker(@RequestBody Speaker speaker) {
         return speakerService.saveSpeaker(speaker);
     }
 
-    @GetMapping("/all")
-    public List<SpeakerDTO> getEventSpeakers(@RequestParam(required = true) Long eventId) {
+    @GetMapping("/{eventId}")
+    public List<SpeakerDTO> getSpeakersByEvent(@RequestParam(required = true) Long eventId) {
         return speakerService.getAllSpeakersByEvent(eventId);
     }
 

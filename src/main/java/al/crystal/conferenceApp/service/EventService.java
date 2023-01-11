@@ -36,11 +36,6 @@ public class EventService {
             throw new Exception
                     ("Between this Start Date and End Date there is another event!");
         }
-//        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
-//            throw new Exception("not done");
-//        }
-//        Optional<Organiser> organiserFoundById = organiserRepository.findById(event.getOrganiserId());
-
         Event newEvent = Event.builder()
                 .title(event.getTitle())
                 .startDay(event.getStartDay())
@@ -52,13 +47,12 @@ public class EventService {
                 .organiser(event.getOrganiser())
                 .build();
         Optional<Organiser> organiserFoundById = organiserRepository.findById(newEvent.getOrganiser().getId());
-
         return this.eventRepository.save(newEvent);
     }
 
-    public List<EventDTO> getAllEvents() {
-        List<Event> events =  this.eventRepository.findAll();
-        return events.stream().map(event -> EventMapper.Instance.eventDto(event)).collect(Collectors.toList());
+    public List<Event> getAllEvents() {
+        return this.eventRepository.findAll();
+//        return events.stream().map(event -> EventMapper.Instance.eventDTOToEvent(event)).collect(Collectors.toList());
     }
 
     public List<Event> eventToShow(){
@@ -79,7 +73,7 @@ public class EventService {
         return this.eventRepository.findAll();
     }
 
-    public List<EventDTO> updateEvent(Event event) {
+    public List<Event> updateEvent(Event event) throws Exception{
         Event existingEvent = this.eventRepository.findById(event.getId()).orElse(null);
         if (existingEvent != null) {
             existingEvent.setTitle(event.getTitle());
