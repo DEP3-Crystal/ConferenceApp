@@ -7,7 +7,8 @@ import al.crystal.conferenceApp.model.Event;
 public class EventMap {
 
     public static EventDTO toDto(Event event) {
-        return EventDTO.builder().id(event.getId())
+        return EventDTO.builder()
+                .id(event.getId())
                 .title(event.getTitle())
                 .location(event.getLocation())
                 .startDay(event.getStartDay())

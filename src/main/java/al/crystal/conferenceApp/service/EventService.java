@@ -2,6 +2,13 @@ package al.crystal.conferenceApp.service;
 
 import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.mapper.EventMap;
+import al.crystal.conferenceApp.mapper.EventMapper;
+import al.crystal.conferenceApp.mapper.SpeakerMapper;
+import al.crystal.conferenceApp.model.Event;
+import al.crystal.conferenceApp.model.Organiser;
+import al.crystal.conferenceApp.model.Speaker;
+import al.crystal.conferenceApp.repository.EventRepository;
+import al.crystal.conferenceApp.repository.OrganiserRepository;
 import al.crystal.conferenceApp.model.*;
 import al.crystal.conferenceApp.repository.*;
 import com.github.javafaker.Bool;
@@ -45,11 +52,6 @@ public class EventService {
             throw new Exception
                     ("Between this Start Date and End Date there is another event!");
         }
-//        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
-//            throw new Exception("not done");
-//        }
-//        Optional<Organiser> organiserFoundById = organiserRepository.findById(event.getOrganiserId());
-
         Event newEvent = Event.builder()
                 .title(event.getTitle())
                 .startDay(event.getStartDay())
@@ -63,12 +65,12 @@ public class EventService {
                 .build();
         System.out.println(event);
 //        Optional<Organiser> organiserFoundById = organiserRepository.findById(newEvent.getOrganiser().getId());
-
-        return this.eventRepository.save(event);
+        return this.eventRepository.save(newEvent);
     }
 
     public List<Event> getAllEvents() {
         return this.eventRepository.findAll();
+//        return events.stream().map(event -> EventMapper.Instance.eventDTOToEvent(event)).collect(Collectors.toList());
     }
 
     public List<Event> eventToShow() {
@@ -89,7 +91,7 @@ public class EventService {
         return this.eventRepository.findAll();
     }
 
-    public List<Event> updateEvent(Event event) {
+    public List<Event> updateEvent(Event event) throws Exception{
         Event existingEvent = this.eventRepository.findById(event.getId()).orElse(null);
         if (existingEvent != null) {
             existingEvent.setTitle(event.getTitle());

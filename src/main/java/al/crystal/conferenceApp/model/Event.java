@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.*;
@@ -50,7 +51,7 @@ public class Event {
     private String description;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "events",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "events")
     private List<Speaker> speakers;
 
 }

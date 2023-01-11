@@ -29,6 +29,10 @@ public class SpeakerController {
         return speakerService.saveSpeaker(speaker);
     }
 
+    @GetMapping("/{eventId}")
+    public List<SpeakerDTO> getSpeakersByEvent(@RequestParam(required = true) Long eventId) {
+        return speakerService.getAllSpeakersByEvent(eventId);
+    }
     @GetMapping("/all")
     public List<SpeakerDTO> getEventSpeakers(@RequestParam(required = true) Long eventId) {
         return speakerService.getAllSpeakersByEvent(eventId);

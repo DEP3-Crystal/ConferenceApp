@@ -42,7 +42,11 @@ public class EventController {
 
     @PutMapping(value = "/")
     public List<Event> updateEvents(@RequestBody Event event) {
-        return this.eventService.updateEvent(event);
+        try {
+            return this.eventService.updateEvent(event);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping(value = "/")

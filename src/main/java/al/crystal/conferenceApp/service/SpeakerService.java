@@ -61,7 +61,8 @@ public class SpeakerService {
     }
 
     public SpeakerRate findSpeakerRateById(String email, Long speakerId) {
-        Participant user = this.participantRepository.findByEmail(email);
+        Participant user = this.participantRepository.findByEmail(email)
+                ;
         if (user != null) {
             SpeakerRateId speakerRateId = new SpeakerRateId(user.getId(), speakerId);
             Optional<SpeakerRate> speakerRate = speakerRateRepository.findById(speakerRateId);
@@ -76,7 +77,8 @@ public class SpeakerService {
     }
 
     public Integer checkRatedSpeaker(String email, Long speakerId) {
-        Participant user = this.participantRepository.findByEmail(email);
+        Participant user = this.participantRepository.findByEmail(email)
+                ;
         if (user != null) {
             SpeakerRateId speakerRateId = new SpeakerRateId(user.getId(), speakerId);
             Optional<SpeakerRate> speakerRate = speakerRateRepository.findById(speakerRateId);
@@ -84,7 +86,7 @@ public class SpeakerService {
                 if(speakerRate.get().getRating()!=null) {
                     return speakerRate.get().getRating();}
                 else {
-                   return  null;
+                    return  null;
                 }
             } else {
                 return -1;
