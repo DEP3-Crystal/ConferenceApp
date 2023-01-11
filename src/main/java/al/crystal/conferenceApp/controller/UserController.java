@@ -1,6 +1,5 @@
 package al.crystal.conferenceApp.controller;
 
-
 import al.crystal.conferenceApp.dto.LoginModel;
 import al.crystal.conferenceApp.dto.UserDto;
 import al.crystal.conferenceApp.model.Organiser;
@@ -18,7 +17,7 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UsersService userServices;
+    private UsersService userServices;
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> loginUser(@RequestBody LoginModel loginModel) {
@@ -35,7 +34,22 @@ public class UserController {
         return userServices.getAll();
     }
 
-    @GetMapping("/users/participants")
+    @GetMapping(value = "/users/{id}")
+    public User findUserById(@PathVariable Long id) {
+        return userServices.getUserById(id);
+    }
+
+    @GetMapping(value = "/users/{email}")
+    public User findUserByEmail(@PathVariable String email) {
+        return userServices.getUserByEmail(email);
+    }
+
+    @GetMapping(value="/users/type/{email}")
+    public String findUserType(@PathVariable String email){
+        return this.userServices.findType(email);
+    }
+
+    @GetMapping(value = "/user/participants")
     public List<Participant> getAllParticipants() {
         return this.userServices.getAllParticipants();
     }
@@ -45,7 +59,7 @@ public class UserController {
         return this.userServices.getAllOrganisers();
     }
 
-    @PostMapping(value = "/users/save")
+    @PostMapping(value = "")
     public List<User> addUser(@RequestBody User user) throws Exception {
         String existingEmail = user.getEmail();
         if (existingEmail != null && !"".equals(existingEmail)) {
@@ -58,14 +72,16 @@ public class UserController {
         return this.userServices.getAll();
     }
 
-    @DeleteMapping(value = "/users/delete/{id}")
+    @DeleteMapping(value = "users/{id}")
     public List<User> deleteUser(@PathVariable Long id) {
         return this.userServices.deleteUser(id);
     }
 
-    @PutMapping(value = "users/update")
+    @PutMapping(value = "")
     public List<User> updateUser(@RequestBody User user) {
         return this.userServices.updateUser(user);
     }
+
+
 
 }

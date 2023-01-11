@@ -17,13 +17,13 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     @Query(value = "Select * from session s JOIN tracks t  ON (t.id=s.track_id) where DATE(s.start_time) =:startDate and (t.room_location)=:roomLocation and s.event_id=:id ", nativeQuery = true)
     List<Session> findAllByStartTimeAndTrackRoomLocation(LocalDate startDate, String roomLocation, Long id);
 
-    @Query("SELECT DISTINCT DATE(s.startTime) FROM session s")
+    @Query(value = "SELECT DISTINCT DATE(s.startTime) FROM session s" ,nativeQuery = true)
     List<String> findDistinctStartTime();
 
     @Query(value = "SELECT DISTINCT DATE(s.start_time) FROM session s JOIN tracks t ON (t.id=s.track_id) where (t.room_location)=:roomLocation", nativeQuery = true)
     List<String> findDistinctStartTimeBasedOnLocation(String roomLocation);
 
-    @Query("SELECT DISTINCT (t.roomLocation) FROM tracks t")
+    @Query(value = "SELECT DISTINCT (t.roomLocation) FROM tracks t",nativeQuery = true)
     List<String> findDistinctTrackRoomLocation();
 
     @Query(value = "SELECT DISTINCT (t.room_location) FROM tracks t JOIN session s ON (t.id=s.track_id) where DATE(s.start_time) =:startDate", nativeQuery = true)
@@ -52,6 +52,8 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     @Query(value = "SELECT DISTINCT (t.room_location) FROM tracks t JOIN session s ON (t.id=s.track_id) where s.event_id=:eventId", nativeQuery = true)
     List<String> findDistinctLocationBasedOnEventId(Long eventId);
+
+
 }
 
 

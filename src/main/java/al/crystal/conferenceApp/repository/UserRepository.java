@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "Select u.dtype from user u where u.email =:email", nativeQuery = true)
     String findDTypeOfLoggedUser(String email);
 
-
     User findByEmail(String email);
+
 }

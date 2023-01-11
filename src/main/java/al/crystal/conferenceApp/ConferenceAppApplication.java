@@ -52,12 +52,12 @@ public class ConferenceAppApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        OrganizerDTO organizerDTO = new OrganizerDTO("fda", "fea", "fabfr",
-                "ewfeadw", "ewfeadw", "ewfeadw",
-                "ewfeadw", "ewfead", "feas", "fa");
-        organizerService.addOrganizer(organizerDTO);
-        Organiser organizer = organizerService.getOrganizer(1L);
-        fakerDataAccess.createSessions(5, 3, 15, organizer, 50);
+//        OrganizerDTO organizerDTO = new OrganizerDTO("fda", "fea", "fabfr",
+//                "ewfeadw", "ewfeadw", "ewfeadw",
+//                "ewfeadw", "ewfead", "feas", "fa");
+//        organizerService.addOrganizer(organizerDTO);
+//        Organiser organizer = organizerService.getOrganizer(1L);
+//        fakerDataAccess.createSessions(5, 3, 15, organizer, 50);
 
 //        EventDTO event = fakerDataAccess.createEvent(organizer);
 //        eventService.saveEvent(event);

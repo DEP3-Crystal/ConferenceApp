@@ -6,12 +6,12 @@ import al.crystal.conferenceApp.model.Event;
 import al.crystal.conferenceApp.model.Organiser;
 import al.crystal.conferenceApp.repository.EventRepository;
 import al.crystal.conferenceApp.repository.OrganiserRepository;
-import al.crystal.conferenceApp.service.job_ruunner.EventJobRunner;
 import al.crystal.conferenceApp.service.job_ruunner.SessionJobRunner;
 import al.crystal.conferenceApp.service.job_ruunner.SpeakerJobRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,22 +19,30 @@ import java.util.stream.Collectors;
 @Service
 public class EventService {
     @Autowired
-    private EventRepository eventRepository;
-    @Autowired
-    private SpeakerJobRunner speakerJobRunner;
+    private OrganiserRepository organiserRepository;
     @Autowired
     private SessionJobRunner sessionJobRunner;
     @Autowired
-    private EventJobRunner eventJobRunner;
+    public SpeakerJobRunner speakerJobRunner;
+
     @Autowired
-    private OrganiserRepository organiserRepository;
+    EventRepository eventRepository;
+    public Event saveEvent(Event event) throws Exception {
 
-    public Event saveEvent(EventDTO event) {
+        LocalDate today =  LocalDate.now();
+        if(today.isAfter(event.getStartDay())){
+            throw new Exception("The day to start is a past Day!");
+        }else if(event.getStartDay().isAfter(event.getEndDay())){
+            throw new Exception("The day to start is a after the day to end!");}
 
+        if(!(eventRepository.findEventsDate(event.getStartDay(),event.getEndDay()).isEmpty())){
+            throw new Exception
+                    ("Between this Start Date and End Date there is another event!");
+        }
 //        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
 //            throw new Exception("not done");
 //        }
-        Optional<Organiser> organiserFoundById = organiserRepository.findById(event.getOrganiserId());
+//        Optional<Organiser> organiserFoundById = organiserRepository.findById(event.getOrganiserId());
 
         Event newEvent = Event.builder()
                 .title(event.getTitle())
@@ -42,18 +50,27 @@ public class EventService {
                 .endDay(event.getEndDay())
                 .location(event.getLocation())
                 .capacity(event.getCapacity())
-                .organiser(organiserFoundById.get())
+                .eventImage(event.getEventImage())
+                .description(event.getDescription())
+                .organiser(event.getOrganiser())
                 .build();
-
-        Event save = this.eventRepository.save(newEvent);
-        sessionJobRunner.scheduleTaskWithDelay(save.getEndDay());
-        speakerJobRunner.scheduleTaskWithDelay(save.getEndDay());
-        return save;
-
+        Optional<Organiser> organiserFoundById = organiserRepository.findById(newEvent.getOrganiser().getId());
+        sessionJobRunner.scheduleTaskWithDelay(event.getEndDay());
+        speakerJobRunner.scheduleTaskWithDelay(event.getEndDay());
+        return this.eventRepository.save(newEvent);
     }
 
     public List<Event> getAllEvents() {
         return this.eventRepository.findAll();
+    }
+
+    public List<Event> eventToShow(){
+        LocalDate today =  LocalDate.now();
+        if(!(eventRepository.eventToShowNow(today)).isEmpty()){
+            return eventRepository.eventToShowNow(today);
+        }else{
+            return eventRepository.eventsToShowAfter(today);
+        }
     }
 
     public Event getEventById(Long id) {
@@ -65,10 +82,20 @@ public class EventService {
         return this.eventRepository.findAll();
     }
 
-    public Event updateEvent(Event event) {
-        Event existingEvent = this.eventRepository.findById(event.getId()).get();
-
-        return this.eventRepository.save(event);
+    public List<Event> updateEvent(Event event) {
+        Event existingEvent = this.eventRepository.findById(event.getId()).orElse(null);
+        if (existingEvent != null) {
+            existingEvent.setTitle(event.getTitle());
+            existingEvent.setStartDay(event.getStartDay());
+            existingEvent.setEndDay(event.getEndDay());
+            existingEvent.setLocation(event.getLocation());
+            existingEvent.setCapacity(event.getCapacity());
+            existingEvent.setEventImage(event.getEventImage());
+            existingEvent.setDescription(event.getDescription());
+            existingEvent.setOrganiser(event.getOrganiser());
+            this.eventRepository.save(existingEvent);
+        }
+        return this.getAllEvents();
     }
 
     public List<EventDTO> getAllEventsByOrganiserId(Long id) {

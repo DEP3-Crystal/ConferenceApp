@@ -28,6 +28,7 @@ public class SessionDTO {
     private Track track;
     private Event event;
     private List<SpeakerDTO> speakersDTO;
+    private Integer participation;
 //    private int participation; //map sessionRatings size
 
 

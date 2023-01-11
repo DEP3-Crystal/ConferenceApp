@@ -66,7 +66,10 @@ public class SessionService {
 
     public SessionDTO getOneSession(Long id) {
         Session session = sessionRepository.findById(id).get();
-        return SessionMapper.Instance.sessionToSessionDTO(session);
+        SessionDTO sessionDTO = SessionMapper.Instance.sessionToSessionDTO(session);
+        sessionDTO.setParticipation(participantSessionRepository.getParticipationForSession(sessionDTO.getId()));
+        return sessionDTO;
+
     }
 
     private List<SessionDTO> getSessionsByDateBasedOnEvent(String date, Long id) {
@@ -104,7 +107,8 @@ public class SessionService {
 
     public List<SessionDTO> getAllSessionsDTO() {
         List<Session> sessionList = sessionRepository.findAll(Sort.by("startTime"));
-        return sessionsToSessionsDTO(sessionList);
+        List<SessionDTO> sessionDTOS = sessionsToSessionsDTO(sessionList);
+        return sessionDTOS;
     }
 
     public List<SessionDTO> getSessions(String date, String location, Long id) {
@@ -124,7 +128,10 @@ public class SessionService {
             return getSessionsByDate(date);
         } else {
             List<Session> sessionList = getAllSessions();
-            return sessionsToSessionsDTO(sessionList);
+            List<SessionDTO> sessionDTOS = sessionsToSessionsDTO(sessionList);
+            sessionDTOS.forEach(sessionDTO ->
+                    sessionDTO.setParticipation(participantSessionRepository.getParticipationForSession(sessionDTO.getId())));
+            return sessionDTOS;
         }
     }
 
