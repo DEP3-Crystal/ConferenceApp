@@ -3,6 +3,7 @@ package al.crystal.conferenceApp.service;
 import al.crystal.conferenceApp.dto.speaker.SpeakerDTO;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
 import al.crystal.conferenceApp.model.*;
+import al.crystal.conferenceApp.repository.EventRepository;
 import al.crystal.conferenceApp.repository.ParticipantRepository;
 import al.crystal.conferenceApp.repository.SpeakerRateRepository;
 import al.crystal.conferenceApp.repository.SpeakerRepository;
@@ -25,9 +26,17 @@ public class SpeakerService {
     @Autowired
     private ParticipantRepository participantRepository;
 
-    public String saveSpeaker(Speaker speaker) {
-        speakerRepository.save(speaker);
-        return "done";
+    @Autowired
+    private EventRepository eventRepository;
+
+    public Boolean saveSpeaker(Speaker speaker, Long eventId) {
+        Optional<Event> byId = eventRepository.findById(eventId);
+        if(byId.isPresent()){
+            speaker.setEvents(byId.get());
+            speakerRepository.save(speaker);
+            return true;
+        }
+        return false;
     }
 
     public List<SpeakerDTO> saveListOfSpeaker(List<Speaker> speakers) {
