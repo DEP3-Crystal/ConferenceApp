@@ -24,13 +24,17 @@ public class SpeakerController {
     @Autowired
     private SpeakerService speakerService;
 
-    @PostMapping("/add")
-    public String createSpeaker(@RequestBody Speaker speaker) {
-        return speakerService.saveSpeaker(speaker);
+    @PostMapping("/add/{eventId}")
+    public ResponseEntity<Boolean> createSpeaker(@RequestBody Speaker speaker, @PathVariable Long eventId) {
+        boolean result = speakerService.saveSpeaker(speaker, eventId);
+        if(result){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/{eventId}")
-    public List<SpeakerDTO> getSpeakersByEvent(@RequestParam(required = true) Long eventId) {
+    public List<SpeakerDTO> getSpeakersByEvent(@PathVariable Long eventId) {
         return speakerService.getAllSpeakersByEvent(eventId);
     }
     @GetMapping("/all")
