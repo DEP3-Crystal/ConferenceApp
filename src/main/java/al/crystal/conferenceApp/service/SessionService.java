@@ -1,6 +1,8 @@
 package al.crystal.conferenceApp.service;
 
 import al.crystal.conferenceApp.dto.SessionDTO;
+import al.crystal.conferenceApp.exception.IllegalException;
+import al.crystal.conferenceApp.exception.ResourceNotFoundException;
 import al.crystal.conferenceApp.mapper.SessionMapper;
 import al.crystal.conferenceApp.mapper.SpeakerMapper;
 import al.crystal.conferenceApp.model.*;
@@ -18,31 +20,61 @@ import java.util.stream.Collectors;
 @Service
 public class SessionService {
 
-    @Autowired
-    private SessionRepository sessionRepository;
+    private final SessionRepository sessionRepository;
+    private final TrackRepository trackRepository;
+    private final EventRepository eventRepository;
+    private final ParticipantSessionRepository participantSessionRepository;
+    private final UserRepository userRepository;
+    private final ParticipantRepository participantRepository;
+    private final SpeakerMapper speakerMapper = SpeakerMapper.Instance;
+    private final SessionMapper sessionMapper = SessionMapper.Instance;
 
     @Autowired
-    private TrackRepository trackRepository;
+    public SessionService(SessionRepository sessionRepository,
+                          TrackRepository trackRepository,
+                          EventRepository eventRepository,
+                          ParticipantSessionRepository participantSessionRepository,
+                          UserRepository userRepository,
+                          ParticipantRepository participantRepository) {
+        this.sessionRepository = sessionRepository;
+        this.trackRepository = trackRepository;
+        this.eventRepository = eventRepository;
+        this.participantSessionRepository = participantSessionRepository;
+        this.userRepository = userRepository;
+        this.participantRepository = participantRepository;
+    }
 
-    @Autowired
-    private EventRepository eventRepository;
 
-    @Autowired
-    private ParticipantSessionRepository participantSessionRepository;
+    public Session createSession(SessionDTO sessionDTO) throws ResourceNotFoundException {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ParticipantRepository participantRepository;
-
-
-    public Session createSession(SessionDTO sessionDTO) {
+        if (sessionDTO.getTrack() == null) {
+            throw new ResourceNotFoundException("Track not found");
+        }
         long selectedTrackId = sessionDTO.getTrack().getId();
-        Track selectedTrack = trackRepository.findById(selectedTrackId).get();
+        boolean isIncludedTrackId = selectedTrackId == 0;
+        if (isIncludedTrackId) {
+            throw new ResourceNotFoundException("TrackId not found");
+        }
+        Track selectedTrack = trackRepository.findById(selectedTrackId).orElseThrow(() -> new ResourceNotFoundException("Track not found in DB"));
 
         long selectedEventId = sessionDTO.getEvent().getId();
-        Event selectedEvent = eventRepository.findById(selectedEventId).get();
+        if (selectedEventId == 0) {
+            throw new ResourceNotFoundException("Event not found");
+        }
+        Event selectedEvent = eventRepository.findById(selectedEventId).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+
+        //Date validation:
+
+        List<SessionDTO> sessionsByEvent = getSessionsByEvent(selectedEventId);
+        for (SessionDTO session : sessionsByEvent) {
+            if (session.getStartTime().isBefore(sessionDTO.getEndTime()) && session.getEndTime().isAfter(sessionDTO.getStartTime())
+                    || session.getStartTime().isBefore(sessionDTO.getStartTime()) && session.getEndTime().isAfter(sessionDTO.getStartTime())
+                    || session.getStartTime().isBefore(sessionDTO.getEndTime()) && session.getEndTime().isAfter(sessionDTO.getEndTime())) {
+                throw new IllegalException("Conflicting session found. Session ID: " + session.getId());
+            }
+        }
+
+
         Session newSession = Session.builder()
                 .description(sessionDTO.getDescription())
                 .endTime(sessionDTO.getEndTime())
@@ -52,22 +84,27 @@ public class SessionService {
                 .track(selectedTrack)
                 .event(selectedEvent)
                 .type(sessionDTO.getType())
-                .speakers(sessionDTO.getSpeakersDTO().stream().map(speaker -> SpeakerMapper.Instance.speaker(speaker)).collect(Collectors.toList()))
+                .speakers(sessionDTO.getSpeakersDTO().stream().map(speakerMapper::speaker).collect(Collectors.toList()))
                 .build();
         return sessionRepository.save(newSession);
     }
 
-    public String addSpeakers(Long sessionId, List<Speaker> speakers) {
-        Session session = sessionRepository.getReferenceById(sessionId);
-        session.getSpeakers().addAll(speakers);
-        sessionRepository.save(session);
-        return "done";
-    }
 
     public SessionDTO getOneSession(Long id) {
-        Session session = sessionRepository.findById(id).get();
-        SessionDTO sessionDTO = SessionMapper.Instance.sessionToSessionDTO(session);
-        sessionDTO.setParticipation(participantSessionRepository.getParticipationForSession(sessionDTO.getId()));
+        Optional<Long> optionalId = Optional.ofNullable(id);
+        if (!optionalId.isPresent()) {
+            throw new IllegalArgumentException("Session id is missing");
+        }
+        Optional<Session> session = sessionRepository.findById(id);
+        if (!session.isPresent()) {
+            throw new ResourceNotFoundException("Session not found in DB");
+        }
+        SessionDTO sessionDTO = sessionMapper.sessionToSessionDTO(session.get());
+        try {
+            sessionDTO.setParticipation(participantSessionRepository.getParticipationForSession(sessionDTO.getId()));
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Error retrieving participation for session");
+        }
         return sessionDTO;
 
     }
@@ -111,6 +148,7 @@ public class SessionService {
         return sessionDTOS;
     }
 
+
     public List<SessionDTO> getSessions(String date, String location, Long id) {
         if (date == null && location == null && id != null) {
             return getSessionsByEvent(id);
@@ -153,7 +191,7 @@ public class SessionService {
 
     private List<SessionDTO> sessionsToSessionsDTO(List<Session> sessionList) {
         return sessionList.stream()
-                .map(session -> SessionMapper.Instance.sessionToSessionDTO(session))
+                .map(sessionMapper::sessionToSessionDTO)
                 .collect(Collectors.toList());
     }
 
@@ -188,7 +226,6 @@ public class SessionService {
 
 
     public void deleteSession(Long id) {
-
         participantSessionRepository.deleteBySessionId(id);
         sessionRepository.deleteById(id);
     }
@@ -203,10 +240,10 @@ public class SessionService {
         sessionOnDB.setStartTime(sessionDTO.getStartTime());
         sessionOnDB.setEndTime(sessionDTO.getEndTime());
         sessionOnDB.setTrack(sessionDTO.getTrack());
-        sessionOnDB.setSpeakers(sessionDTO.getSpeakersDTO().stream().map(speakerDTO -> SpeakerMapper.Instance.speaker(speakerDTO)).collect(Collectors.toList()));
+        sessionOnDB.setSpeakers(sessionDTO.getSpeakersDTO().stream().map(speakerMapper::speaker).collect(Collectors.toList()));
 
         Session session = sessionRepository.saveAndFlush(sessionOnDB);
-        return SessionMapper.Instance.sessionToSessionDTO(session);
+        return sessionMapper.sessionToSessionDTO(session);
 
     }
 

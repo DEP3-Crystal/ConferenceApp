@@ -2,16 +2,8 @@ package al.crystal.conferenceApp.service;
 
 import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.mapper.EventMap;
-import al.crystal.conferenceApp.mapper.EventMapper;
-import al.crystal.conferenceApp.mapper.SpeakerMapper;
-import al.crystal.conferenceApp.model.Event;
-import al.crystal.conferenceApp.model.Organiser;
-import al.crystal.conferenceApp.model.Speaker;
-import al.crystal.conferenceApp.repository.EventRepository;
-import al.crystal.conferenceApp.repository.OrganiserRepository;
 import al.crystal.conferenceApp.model.*;
 import al.crystal.conferenceApp.repository.*;
-import com.github.javafaker.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +83,7 @@ public class EventService {
         return this.eventRepository.findAll();
     }
 
-    public List<Event> updateEvent(Event event) throws Exception{
+    public List<Event> updateEvent(Event event) throws Exception {
         Event existingEvent = this.eventRepository.findById(event.getId()).orElse(null);
         if (existingEvent != null) {
             existingEvent.setTitle(event.getTitle());
@@ -151,7 +143,7 @@ public class EventService {
 //                }
 
 //                if (byParticipantIdAndSessionId != null) {
-                    participantSessionRepository.saveAndFlush(ps);
+                participantSessionRepository.saveAndFlush(ps);
 //                }
             }
             return sessionList.size() > 0;

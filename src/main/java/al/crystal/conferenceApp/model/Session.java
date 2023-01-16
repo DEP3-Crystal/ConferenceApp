@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name = "track_id", nullable = false)
+    @NotNull
     private Track track;
 
     @ManyToOne

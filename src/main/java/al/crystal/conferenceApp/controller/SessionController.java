@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -21,20 +22,22 @@ public class SessionController {
     private SessionService sessionService;
 
     @PostMapping
-    public Session addSession(@RequestBody SessionDTO session) {
-        return sessionService.createSession(session);
+    public Session addSession(@Valid @RequestBody SessionDTO session) {
+        try {
+            return sessionService.createSession(session);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping("/{id}")
     public SessionDTO getSession(@PathVariable Long id) {
-        return sessionService.getOneSession(id);
+        try {
+            return sessionService.getOneSession(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-
-//    @GetMapping("event/{id}")
-//    public  List<SessionDTO> getSessionsByEvent(@PathVariable Long id){
-//        return sessionService.getSessionsByEvent(id);
-//    }
-
 
     @GetMapping()
     public List<SessionDTO> getSessions(@RequestParam(required = false) String date,
@@ -112,9 +115,9 @@ public class SessionController {
 
     @GetMapping("/checkrate")
     public ResponseEntity<Integer> checkRatedSession(@RequestParam(required = true) String email,
-                                                     @RequestParam(required = true) Long sessionId){
+                                                     @RequestParam(required = true) Long sessionId) {
         Integer rated = this.sessionService.checkRatedSession(email, sessionId);
-        if (rated!=null) {
+        if (rated != null) {
             return new ResponseEntity<>(rated, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);
