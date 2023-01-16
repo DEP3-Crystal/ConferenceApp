@@ -46,7 +46,8 @@ public class SessionService {
 
 
     public Session createSession(SessionDTO sessionDTO) throws ResourceNotFoundException {
-
+        System.out.println("Start time: " + sessionDTO.getStartTime());
+        System.out.println("End time: " + sessionDTO.getEndTime());
         if (sessionDTO.getTrack() == null) {
             throw new ResourceNotFoundException("Track not found");
         }
@@ -64,13 +65,12 @@ public class SessionService {
         Event selectedEvent = eventRepository.findById(selectedEventId).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
 
         //Date validation:
-
         List<SessionDTO> sessionsByEvent = getSessionsByEvent(selectedEventId);
-        for (SessionDTO session : sessionsByEvent) {
-            if (session.getStartTime().isBefore(sessionDTO.getEndTime()) && session.getEndTime().isAfter(sessionDTO.getStartTime())
-                    || session.getStartTime().isBefore(sessionDTO.getStartTime()) && session.getEndTime().isAfter(sessionDTO.getStartTime())
-                    || session.getStartTime().isBefore(sessionDTO.getEndTime()) && session.getEndTime().isAfter(sessionDTO.getEndTime())) {
-                throw new IllegalException("Conflicting session found. Session ID: " + session.getId());
+        for (SessionDTO sessionFromList : sessionsByEvent) {
+            if (sessionFromList.getStartTime().isBefore(sessionDTO.getEndTime()) && sessionFromList.getEndTime().isAfter(sessionDTO.getStartTime())
+                    || sessionFromList.getStartTime().isBefore(sessionDTO.getStartTime()) && sessionFromList.getEndTime().isAfter(sessionDTO.getStartTime())
+                    || sessionFromList.getStartTime().isBefore(sessionDTO.getEndTime()) && sessionFromList.getEndTime().isAfter(sessionDTO.getEndTime())) {
+                throw new IllegalException("Conflicting session found. Session ID: " + sessionFromList.getId());
             }
         }
 
@@ -241,6 +241,16 @@ public class SessionService {
         sessionOnDB.setEndTime(sessionDTO.getEndTime());
         sessionOnDB.setTrack(sessionDTO.getTrack());
         sessionOnDB.setSpeakers(sessionDTO.getSpeakersDTO().stream().map(speakerMapper::speaker).collect(Collectors.toList()));
+
+        //Date validation:
+        List<SessionDTO> sessionsByEvent = getSessionsByEvent(sessionDTO.getEvent().getId()).stream().filter((session) -> !session.getId().equals(sessionDTO.getId())).collect(Collectors.toList());
+        for (SessionDTO sessionFromList : sessionsByEvent) {
+            if (sessionFromList.getStartTime().isBefore(sessionDTO.getEndTime()) && sessionFromList.getEndTime().isAfter(sessionDTO.getStartTime())
+                    || sessionFromList.getStartTime().isBefore(sessionDTO.getStartTime()) && sessionFromList.getEndTime().isAfter(sessionDTO.getStartTime())
+                    || sessionFromList.getStartTime().isBefore(sessionDTO.getEndTime()) && sessionFromList.getEndTime().isAfter(sessionDTO.getEndTime())) {
+                throw new IllegalException("Conflicting session found. Session ID: " + sessionFromList.getId());
+            }
+        }
 
         Session session = sessionRepository.saveAndFlush(sessionOnDB);
         return sessionMapper.sessionToSessionDTO(session);
