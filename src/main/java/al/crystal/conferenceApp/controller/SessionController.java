@@ -6,13 +6,16 @@ import al.crystal.conferenceApp.model.Session;
 import al.crystal.conferenceApp.model.message_model.SessionMessage;
 import al.crystal.conferenceApp.rabbitMq.publish.PublishSession;
 import al.crystal.conferenceApp.service.SessionService;
+import com.rabbitmq.client.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/sessions")
@@ -105,7 +108,15 @@ public class SessionController {
         boolean submitted = this.sessionService.rateSession(email, sessionId, rate);
 
         if (submitted) {
-            PublishSession publishSession = new PublishSession(ConferenceAppApplication.connection);
+            ConnectionFactory connectionFactory=new ConnectionFactory();
+            connectionFactory.setHost("localhost");
+            PublishSession publishSession = null;
+            try {
+                publishSession = new PublishSession(connectionFactory.newConnection());
+                System.out.println("subbmitted");
+            } catch (IOException | TimeoutException e) {
+                throw new RuntimeException(e);
+            }
             publishSession.sendMessage(new SessionMessage(sessionId.toString()));
             return new ResponseEntity<>(true, HttpStatus.OK);
         } else {

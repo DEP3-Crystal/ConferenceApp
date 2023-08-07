@@ -4,7 +4,8 @@ import al.crystal.conferenceApp.dto.EventDTO;
 import al.crystal.conferenceApp.mapper.EventMap;
 import al.crystal.conferenceApp.model.*;
 import al.crystal.conferenceApp.repository.*;
-import com.github.javafaker.Bool;
+import al.crystal.conferenceApp.service.job_ruunner.SessionJobRunner;
+import al.crystal.conferenceApp.service.job_ruunner.SpeakerJobRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,51 +21,40 @@ public class EventService {
     private OrganiserRepository organiserRepository;
 
     @Autowired
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
 
     @Autowired
-    SessionRepository sessionRepository;
+    private SessionRepository sessionRepository;
 
     @Autowired
-    private ParticipantRepository participantRepository;
+     private ParticipantRepository participantRepository;
 
     @Autowired
-    ParticipantSessionRepository participantSessionRepository;
+    private ParticipantSessionRepository participantSessionRepository;
 
+    @Autowired
+    private SessionJobRunner sessionJobRunner;
 
+    @Autowired
+    private SpeakerJobRunner speakerJobRunner;
     public Event saveEvent(Event event) throws Exception {
 
-        LocalDate today = LocalDate.now();
-        if (today.isAfter(event.getStartDay())) {
-            throw new Exception("The day to start is a past Day!");
-        } else if (event.getStartDay().isAfter(event.getEndDay())) {
-            throw new Exception("The day to start is a after the day to end!");
-        }
-
-        if (!(eventRepository.findEventsDate(event.getStartDay(), event.getEndDay()).isEmpty())) {
-            throw new Exception
-                    ("Between this Start Date and End Date there is another event!");
-        }
-//        if (event.getStartDay().toInstant().isAfter(event.getEndDay().toInstant())) {
-//            throw new Exception("not done");
+//        LocalDate today = LocalDate.now();
+//        if (today.isAfter(event.getStartDay())) {
+//            throw new Exception("The day to start is a past Day!");
+//        } else if (event.getStartDay().isAfter(event.getEndDay())) {
+//            throw new Exception("The day to start is a after the day to end!");
 //        }
-//        Optional<Organiser> organiserFoundById = organiserRepository.findById(event.getOrganiserId());
+//
+//        if (!(eventRepository.findEventsDate(event.getStartDay(), event.getEndDay()).isEmpty())) {
+//            throw new Exception
+//                    ("Between this Start Date and End Date there is another event!");
+//        }
 
-        Event newEvent = Event.builder()
-                .title(event.getTitle())
-                .startDay(event.getStartDay())
-                .endDay(event.getEndDay())
-                .location(event.getLocation())
-                .capacity(event.getCapacity())
-                .eventImage(event.getEventImage())
-                .description(event.getDescription())
-                .organiser(event.getOrganiser())
-                .speakers(new ArrayList<>())
-                .build();
-        System.out.println(event);
-//        Optional<Organiser> organiserFoundById = organiserRepository.findById(newEvent.getOrganiser().getId());
-
-        return this.eventRepository.save(event);
+        Event save = this.eventRepository.save(event);
+        sessionJobRunner.scheduleTaskWithDelay(event.getEndDay());
+        speakerJobRunner.scheduleTaskWithDelay(event.getEndDay());
+        return save;
     }
 
     public List<Event> getAllEvents() {
@@ -99,7 +89,7 @@ public class EventService {
             existingEvent.setCapacity(event.getCapacity());
             existingEvent.setEventImage(event.getEventImage());
             existingEvent.setDescription(event.getDescription());
-            this.eventRepository.save(existingEvent);
+            this.eventRepository.save(event);
         }
         return this.getAllEvents();
     }

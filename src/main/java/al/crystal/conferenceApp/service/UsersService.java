@@ -125,7 +125,7 @@ public class UsersService {
     public UserDto loginUser(String email, String password) {
         User userEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
         String type = userRepository.findDTypeOfLoggedUser(email);
-
+        System.out.println(type);
         if (userEmailAndPassword != null) {
             UserDto userDto = UserMapper.toDto(userEmailAndPassword);
             userDto.setType(type);

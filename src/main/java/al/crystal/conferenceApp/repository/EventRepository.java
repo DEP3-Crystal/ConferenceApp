@@ -28,11 +28,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             nativeQuery = true)
     List<Event> findEventsDate(@Param("start_day") LocalDate start_day, @Param("end_day") LocalDate end_day);
 
-    @Query(value = "SELECT * FROM conference.events s where (:today <= s.start_day)",
+    @Query(value = "SELECT * FROM events s where (:today <= s.start_day)",
             nativeQuery = true)
     List<Event> eventsToShowAfter(@Param("today") LocalDate today);
 
-    @Query(value = "SELECT * FROM conference.events s where (:today between s.start_day and s.end_day)",
+    @Query(value = "SELECT * FROM events s where (:today between s.start_day and s.end_day)",
             nativeQuery = true)
     List<Event> eventToShowNow(@Param("today") LocalDate today);
 

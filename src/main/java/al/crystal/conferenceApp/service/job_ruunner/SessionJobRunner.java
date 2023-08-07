@@ -17,14 +17,15 @@ public class SessionJobRunner {
     private TaskScheduler taskScheduler;
 
     public void scheduleTaskWithDelay(LocalDate localDate){
+
         taskScheduler.schedule(new MyTask(), localDate.plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC));
 
     }
 
     class MyTask implements Runnable{
-
         @Override
         public void run() {
+
             ProcessBuilder build_test = new ProcessBuilder(
                     "cmd.exe", "/c", "java -cp src/main/resources/DE_Jar/confereceAppDe-0.0.1-SNAPSHOT.jar com.crystal.jobs.rating.TopSessionRate ");
             build_test.redirectErrorStream(true);

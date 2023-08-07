@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //    @Query(value = "Select * from user u where u.email =:email and u.password =:password and u.dtype in ('o','p')", nativeQuery = true)
     User findByEmailAndPassword(String email, String password);
 
-    @Query(value = "Select u.dtype from user u where u.email =:email", nativeQuery = true)
+    @Query(value = "Select u.dtype from users u where u.email =:email", nativeQuery = true)
     String findDTypeOfLoggedUser(String email);
 
     User findByEmail(String email);

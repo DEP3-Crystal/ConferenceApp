@@ -11,14 +11,17 @@ import al.crystal.conferenceApp.model.SpeakerRate;
 import al.crystal.conferenceApp.model.message_model.SessionMessage;
 import al.crystal.conferenceApp.rabbitMq.publish.PublishSpeaker;
 import al.crystal.conferenceApp.service.SpeakerService;
+import com.rabbitmq.client.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/speaker")
@@ -48,7 +51,14 @@ public class SpeakerController {
             SpeakerRate ratedSpeaker = this.speakerService.rateSpeaker(speakerRateById, rateSpeaker);
             if (ratedSpeaker != null) {
                 SpeakerRateForRatingDto speakerRateForRatingDto = SpeakerRateSecondMapper.Instance.speakerRateDto(ratedSpeaker);
-                PublishSpeaker publishSpeaker=new PublishSpeaker(ConferenceAppApplication.connection);
+                ConnectionFactory connectionFactory=new ConnectionFactory();
+                connectionFactory.setHost("localhost");
+                PublishSpeaker publishSpeaker= null;
+                try {
+                    publishSpeaker = new PublishSpeaker(connectionFactory.newConnection());
+                } catch (IOException | TimeoutException e) {
+                    throw new RuntimeException(e);
+                }
                 publishSpeaker.sendMessage(new SessionMessage(speakerId.toString()));
                 return speakerRateForRatingDto;
             } else {

@@ -20,9 +20,9 @@ public interface ParticipantSessionRepository extends JpaRepository<ParticipantS
 //    @Query(value = "UPDATE participant_session ps SET PS.rating =:rating WHERE ps.user_id = :userId AND ps.session_id = :sessionId", nativeQuery = true)
 //    int updateRating (@Param("rating") long rating, @Param("userId") long userId, @Param("sessionId") long sessionId);
 
-    @Query(value = "SELECT * FROM participant_session ps WHERE ps.participant_id = :userId AND ps.session_id = :sessionId", nativeQuery = true)
+    @Query(value = "SELECT * FROM participant_session ps WHERE ps.participant_user_id = :userId AND ps.session_id = :sessionId", nativeQuery = true)
     ParticipantSession findByParticipantIdAndSessionId(@Param("userId") long userId, @Param("sessionId") long sessionId);
 
-    @Query(value = "SELECT count(participant_id) FROM conference.participant_session where session_id=:sessionId",nativeQuery = true)
+    @Query(value = "SELECT count(participant_user_id) FROM participant_session where session_id=:sessionId",nativeQuery = true)
     Integer getParticipationForSession(@Param("sessionId") Long sessionId);
 }

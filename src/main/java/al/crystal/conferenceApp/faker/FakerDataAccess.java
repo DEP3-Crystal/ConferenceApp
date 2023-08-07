@@ -21,9 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -59,10 +57,11 @@ public class FakerDataAccess {
     public List<Session> createSessions(int numberOfSessions, int numberOfTracks, int numberOfSpeakers, Organiser organiser, int numberOfParticipants) {
 
         EventDTO event1 = createEvent(organiser);
+        System.out.println(event1);
         Event evententity = EventMapper.Instance.eventDTOToEvent(event1);
         Event event = null;
         try {
-            System.out.println(evententity);
+            System.out.println(event1);
             event = eventService.saveEvent(evententity);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -72,6 +71,8 @@ public class FakerDataAccess {
         List<Session> sessions = sessionList(numberOfSessions, event, tracks, speakers);
         createSpeakerRate(numberOfParticipants);
         createParticipantSessions();
+        saveParticipantEEvent(participantService.getParticipants(),event);
+
         return sessions;
     }
 
@@ -177,11 +178,17 @@ public class FakerDataAccess {
         List<Participant> participants = participantService.getParticipants();
         List<Session> allSessions = sessionService.getAllSessions();
         List<ParticipantSession> participantSessionList = allSessions.stream().flatMap(session -> participants.stream()
-                .map(participant1 -> new ParticipantSession(random(List.of(1, 2, 3, 4, 5)), session, participant1))
+                .map(participant1 -> new ParticipantSession(null, session, participant1))
         ).collect(Collectors.toList());
         return participantSessionRepository.saveAll(participantSessionList);
     }
 
+    public void saveParticipantEEvent(List<Participant> participants,Event event){
+        event.setParticipants(participants);
+        eventService.updateEvent(event);
+        System.out.println("done");
+
+    }
     public String email() {
         return fakeValuesService.bothify("????##@gmail.com");
     }

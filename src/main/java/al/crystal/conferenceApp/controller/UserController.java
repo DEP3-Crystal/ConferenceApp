@@ -22,6 +22,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<UserDto> loginUser(@RequestBody LoginModel loginModel) {
         UserDto userDto = userServices.loginUser(loginModel.getEmail(), loginModel.getPassword());
+        System.out.println(userDto);
         if (userDto != null) {
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } else {

@@ -176,9 +176,10 @@ public class SessionService {
 
     public List<String> getSessionsLocations(String date, Long eventId) {
         if (date != null && !date.equals("") && eventId == null) {
-            return sessionRepository.findDistinctLocationBasedOnStartTime(date);
+
+            return sessionRepository.findDistinctLocationBasedOnStartTime(LocalDate.parse(date));
         } else if (date != null && !date.equals("") && eventId != null) {
-            return sessionRepository.findDistinctLocationBasedOnStartTimeAndEventId(date, eventId);
+            return sessionRepository.findDistinctLocationBasedOnStartTimeAndEventId(LocalDate.parse(date), eventId);
         } else if (date == null && eventId != null) {
             return sessionRepository.findDistinctLocationBasedOnEventId(eventId);
         } else {

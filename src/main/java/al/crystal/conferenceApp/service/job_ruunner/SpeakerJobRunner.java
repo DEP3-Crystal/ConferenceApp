@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
@@ -17,12 +16,12 @@ public class SpeakerJobRunner {
     @Autowired
     private TaskScheduler taskScheduler;
 
-    public void scheduleTaskWithDelay(LocalDate localDate){
-        taskScheduler.schedule(new MyTask(),localDate.plusDays(2).atStartOfDay().toInstant(ZoneOffset.UTC));
+    public void scheduleTaskWithDelay(LocalDate localDate) {
+        taskScheduler.schedule(new MyTask(), localDate.plusDays(2).atStartOfDay().toInstant(ZoneOffset.UTC));
 
     }
 
-    class MyTask implements Runnable{
+    class MyTask implements Runnable {
 
         @Override
         public void run() {

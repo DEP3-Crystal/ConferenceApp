@@ -52,8 +52,8 @@ public class ConferenceAppApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        OrganizerDTO organizerDTO = new OrganizerDTO("fda", "fea", "fabfr",
-                "ewfeadw", "ewfeadw", "ewfeadw",
+        OrganizerDTO organizerDTO = new OrganizerDTO("fda", "fea", "admin@admin.com",
+                "luka1234", "ewfeadw", "ewfeadw",
                 "ewfeadw", "ewfead", "feas", "fa");
         organizerService.addOrganizer(organizerDTO);
         Organiser organizer = organizerService.getOrganizer(1L);

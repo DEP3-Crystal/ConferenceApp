@@ -1,9 +1,8 @@
 package al.crystal.conferenceApp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +21,7 @@ public class Speaker {
     private String lastName;
     private String companyName;
     private String biography;
+    @Column(name = "speaker_title")
     private String title;
     private String linkedinUrl;
     private String tweeterUrl;

@@ -22,7 +22,7 @@ public class ParticipantSession {
     @MapsId("userId")
     private Participant participant;
 
-    public ParticipantSession(int rating, Session session, Participant participant) {
+    public ParticipantSession(Integer rating, Session session, Participant participant) {
         this.rating = rating;
         this.session = session;
         this.participant = participant;

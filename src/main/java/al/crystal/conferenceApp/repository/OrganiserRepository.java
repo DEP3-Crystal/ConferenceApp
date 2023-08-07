@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface OrganiserRepository extends JpaRepository<Organiser, Long> {
 
-    @Query(value = "Select o.id, o.biography, o.company_name, o.facebook_url,o.instagram_url,o.linkedin_url,o.tweeter_url from conference.organiser o where o.id =:id", nativeQuery = true)
+    @Query(value = "Select * from organiser where user_id =:id", nativeQuery = true)
     Organiser findOrganiserBy(Long id);
 }
