@@ -9,6 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
+    //fjwifjwoif
+
     @Override
     //Solution for: CrossOrigin Issue
     public void addCorsMappings(CorsRegistry registry) {
